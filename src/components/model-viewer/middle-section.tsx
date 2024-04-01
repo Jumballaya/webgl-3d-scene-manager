@@ -25,7 +25,7 @@ export default function MiddleSection() {
         </div>
         <Separator />
         <TabsContent value="viewer" className="m-0">
-          <div className="w-100 h-100 flex items-center justify-center my-12">
+          <div className="w-100 h-100 flex items-center justify-center my-6">
             <CanvasViewer />
           </div>
         </TabsContent>

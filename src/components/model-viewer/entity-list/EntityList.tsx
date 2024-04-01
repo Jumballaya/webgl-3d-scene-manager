@@ -13,7 +13,7 @@ export default function EntityList() {
     <div>
       <h2 className="py-4 px-4 font-bold">Entity List</h2>
       <Separator />
-      <ScrollArea className="h-72">
+      <ScrollArea className="h-48">
         <ul className="mx-2 list-none">
           {entities.map((e, i) => (
             <EntityListParent

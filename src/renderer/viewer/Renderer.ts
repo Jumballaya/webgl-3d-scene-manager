@@ -60,7 +60,6 @@ export class Renderer {
   private modelUBO: UBO;
   private materialUBO: UBO;
 
-  private screen: Surface;
   private clearColor: vec3 = [1, 1, 1];
   private _darkMode = false;
   private gridFloor: GridMesh;
@@ -98,14 +97,6 @@ export class Renderer {
       lights: ['lights'],
     });
 
-    const screenShader = this.assetManager.getShader('screen')!; // @TODO: better guards for this call
-    this.screen = webgl.createSurface(
-      screenShader,
-      this.camera.screenSize,
-      true,
-    );
-    this.screen.disable();
-
     this.backgroundColor = [0.92, 0.92, 0.92];
     this.gridFloor = new GridMesh(webgl, assetManager, [30, 30]);
   }
@@ -116,7 +107,6 @@ export class Renderer {
 
   public set backgroundColor(c: vec3) {
     this.webgl.clearColor(c);
-    this.screen.clearColor = [c[0], c[1], c[2], 1];
     this.clearColor[0] = c[0];
     this.clearColor[1] = c[1];
     this.clearColor[2] = c[2];
@@ -139,7 +129,6 @@ export class Renderer {
     this.webgl.clear('color', 'depth');
     this.webgl.viewport(0, 0, this.camera.screenSize);
     this.camera.update();
-    this.screen.enable();
     const seen = new Set<number>();
 
     // Render System
@@ -155,8 +144,6 @@ export class Renderer {
         this.gridFloor.transform,
       );
     }
-    this.screen.disable();
-    this.screen.draw(this.camera.ubo);
   }
 
   public createLight<T extends keyof LightTypes>(type: T): LightTypes[T] {
