@@ -157,7 +157,6 @@ export class Loader {
             item.name,
             contents,
           );
-          console.log(geometries);
           for (const geo of geometries) {
             out.geometries[geo.name] = geo;
           }

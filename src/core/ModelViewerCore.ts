@@ -103,7 +103,6 @@ export class ModelViewerCore {
     this.assetManager = assetManager;
     await load_defaults(assetManager); // Must be loaded before scene is created @TODO: Must fix
     const renderer = new Renderer(webgl, camera, assetManager);
-
     this.webgl = webgl;
     this.camera = camera;
     this.renderer = renderer;

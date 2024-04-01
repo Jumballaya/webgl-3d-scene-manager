@@ -1,10 +1,10 @@
-import { Shader } from "./Shader";
-import { Texture } from "./Texture";
-import { FrameBuffer } from "./FrameBuffer";
-import { mat4, vec2 } from "gl-matrix";
-import { Transform } from "../math/Transform";
-import { VertexArray } from "./VertexArray";
-import { UBO } from "./UBO";
+import { Shader } from './Shader';
+import { Texture } from './Texture';
+import { FrameBuffer } from './FrameBuffer';
+import { mat4, vec2 } from 'gl-matrix';
+import { Transform } from '../math/Transform';
+import { VertexArray } from './VertexArray';
+import { UBO } from './UBO';
 
 export class Surface {
   private screenSize: vec2;
@@ -31,14 +31,14 @@ export class Surface {
       buffers: [
         {
           stride: 2,
-          name: "a_position",
+          name: 'a_position',
           type: WebGL2RenderingContext.FLOAT,
           normalized: false,
           data: new Float32Array([-1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1]),
         },
         {
           stride: 2,
-          name: "a_uv",
+          name: 'a_uv',
           type: WebGL2RenderingContext.FLOAT,
           normalized: false,
           data: new Float32Array([0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1]),
@@ -50,10 +50,10 @@ export class Surface {
     mat4.ortho(this.ortho, 0, size[0], 0, size[1], 0.1, 100);
     this.transform.scale = [size[0], size[1], 1];
     this.transform.translation = [0, 0, -10];
-    this.frameBuffer = new FrameBuffer(ctx);
-    this.frameBuffer.attachment({ type: "color", size });
-    if (hasDepth) this.frameBuffer.attachment({ type: "depth", size });
-    this.texture = this.frameBuffer.getColorTexture()!;
+    this.frameBuffer = new FrameBuffer(ctx, 0);
+    this.frameBuffer.attachment({ type: 'color', size });
+    if (hasDepth) this.frameBuffer.attachment({ type: 'depth', size });
+    this.texture = this.frameBuffer.getColorTexture()[0]!;
     this.shader = shader;
   }
 
@@ -85,7 +85,7 @@ export class Surface {
     return this.frameBuffer.getDepthTexture()!;
   }
 
-  public get colorTexture(): Texture {
+  public get colorTexture(): Texture[] {
     return this.frameBuffer.getColorTexture()!;
   }
 
@@ -111,13 +111,13 @@ export class Surface {
 
   public draw(ubo: UBO) {
     // Set up post-processing uniforms
-    this.shader.uniform("u_texture", {
-      type: "texture",
+    this.shader.uniform('u_texture', {
+      type: 'texture',
       value: this.texture.id,
     });
     ubo.bind();
-    ubo.set("projection", this.ortho);
-    ubo.set("view", this.transform.matrix);
+    ubo.set('projection', this.ortho);
+    ubo.set('view', this.transform.matrix);
     ubo.unbind();
 
     // Bind Surface to draw to the default render buffer
