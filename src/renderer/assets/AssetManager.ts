@@ -57,6 +57,12 @@ export class AssetManager {
     }
     for (const [name, mesh] of Object.entries(out.meshes)) {
       this.meshes.set(name, mesh);
+      if (mesh.geometry) {
+        this.geometries.set(name, mesh.geometry);
+      }
+      if (mesh.material) {
+        this.materials.set(name, mesh.material);
+      }
     }
     for (const [name, material] of Object.entries(out.materials)) {
       this.materials.set(name, material);

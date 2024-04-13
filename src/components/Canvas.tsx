@@ -35,14 +35,14 @@ const Canvas = (props: CanvasProps) => {
       const render = () => {
         frameCount++;
         draw?.(context, frameCount);
-        animationFrameId = window.requestAnimationFrame(render);
+        animationFrameId = requestAnimationFrame(render);
       };
       render();
     }
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  });
+  }, [draw, context]);
 
   return (
     <canvas

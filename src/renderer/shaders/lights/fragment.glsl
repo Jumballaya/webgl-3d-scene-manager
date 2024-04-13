@@ -2,14 +2,12 @@
 
 precision mediump float;
 
-
-out vec4 outColor;
+layout(location=3) out vec4 outColor;
 
 in vec2 v_uv;
-in vec3 v_normal;
-in vec3 v_position;
-
-uniform sampler2D u_texture_albedo;
+uniform sampler2D u_texture_color;
+uniform sampler2D u_texture_position;
+uniform sampler2D u_texture_normal;
 
 struct Spotlight {
     vec4 position;
@@ -21,34 +19,28 @@ struct Pointlight {
     vec4 position; // [x,y,z] -> position, w -> is_active
 };
 
-layout(std140) uniform Material {
-  uniform vec3 ambient;
-  uniform vec3 diffuse;
-  uniform vec3 specular;
-  uniform vec3 opacity; // r channel is opacity
-  uniform vec4 textures; // 0 -> albedo 1 -> normal 2 -> specular
-} material;
-
 layout(std140) uniform Lighting {
     Spotlight spotlights[10];
     Pointlight pointlights[10];
 };
 
-float point_light(vec3 position) {
-    vec3 offset = position - v_position;
+const vec3 lightColor = vec3(1.0, 1.0, 1.0);
+
+float point_light(vec3 l_position, vec3 o_position, vec3 normal) {
+    vec3 offset = l_position - o_position;
     vec3 direction = normalize(offset);
     float distance = length(offset);
 
-    float diffuse = max(0.0, dot(direction, v_normal));
+    float diffuse = max(0.0, dot(direction, normal));
     float attenuation = 4.0 / distance;
     return (diffuse * attenuation);
 }
 
-float spot_light(vec3 position, vec3 direction, float inner, float outer) {
-    vec3 offset = position - v_position;
+float spot_light(vec3 l_position, vec3 o_position, vec3 normal, vec3 direction, float inner, float outer) {
+    vec3 offset = l_position - o_position;
     vec3 surfToLight = normalize(offset);
 
-    float diffuse = max(0.0, dot(surfToLight, normalize(v_normal)));
+    float diffuse = max(0.0, dot(surfToLight, normalize(normal)));
     float angleToSurf = dot(direction, -surfToLight);
     float spot = smoothstep(inner, outer, angleToSurf);
     float attenuation = 1.0 / length(offset);
@@ -56,26 +48,24 @@ float spot_light(vec3 position, vec3 direction, float inner, float outer) {
 }
 
 void main() {
-  vec3 albedo_texture = texture(u_texture_albedo, v_uv).rgb;
-  vec3 albedo = (albedo_texture * material.textures.x) + (material.diffuse * (1.0 - material.textures.x));
-  vec3 ambient = (albedo_texture * material.textures.x) + (material.ambient * (1.0 - material.textures.x));
-  
+  vec4 albedo = texture(u_texture_color, v_uv);
+  vec3 position = texture(u_texture_position, v_uv).rgb;
+  vec3 normal = normalize(texture(u_texture_normal, v_uv).rgb);
+
   float brightness = 0.0;
+  float ambient = 0.05;
+
   for (int i = 0; i < 10; i++) {
-      brightness += spot_light(
-          spotlights[i].position.xyz,
-          spotlights[i].direction.xyz,
-          spotlights[i].angles.x,
-          spotlights[i].angles.y) * spotlights[i].angles.z;
-      brightness += point_light(pointlights[i].position.xyz) * pointlights[i].position.w;
+    brightness += spot_light(
+      spotlights[i].position.xyz,
+      position,
+      normal,
+      spotlights[i].direction.xyz,
+      spotlights[i].angles.x,
+      spotlights[i].angles.y) * spotlights[i].angles.z;
+    brightness += point_light(pointlights[i].position.xyz, position, normal) * pointlights[i].position.w;
   }
 
-  
-  // brightness *= 3.0;
-
-  vec3 ambient_color = ambient * 0.1;
-  vec3 diffuse_color = albedo * brightness;
-  vec3 color = ambient_color + diffuse_color;
-
-  outColor = vec4(color, material.opacity.r);
+  outColor = albedo * brightness + ambient;
+  outColor.a = albedo.a;
 }

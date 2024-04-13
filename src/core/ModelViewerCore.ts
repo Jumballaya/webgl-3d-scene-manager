@@ -2,7 +2,6 @@ import { ArcballCamera } from '@/renderer/controls/Arcball';
 import { Controller } from '@/renderer/controls/Controller';
 import { WebGL } from '@/renderer/gl/WebGL';
 import { Camera } from '@/renderer/viewer/Camera';
-import { Renderer } from '@/renderer/viewer/Renderer';
 import { load_defaults } from './load_defaults';
 import { EntityStoreState } from '@/store/entityStore';
 import { ECS } from '@/renderer/viewer/ecs/ECS';
@@ -16,6 +15,7 @@ import { LitMaterial } from '@/renderer/viewer/material/LitMaterial';
 import { Material } from '@/renderer/viewer/material/Material';
 import { Light } from '@/renderer/viewer/light/Light';
 import { LightSystem, MeshRenderSystem } from '@/renderer/viewer/ecs/System';
+import { Renderer } from '@/renderer/viewer/Renderer';
 
 ///////
 //
@@ -72,13 +72,15 @@ export class ModelViewerCore {
 
   public set showGrid(show: boolean) {
     if (this.renderer) {
-      this.renderer.showGrid = show;
+      // this.renderer.showGrid = show;
+      return;
     }
   }
 
   public get showGrid(): boolean {
     if (this.renderer) {
-      return this.renderer.showGrid;
+      // return this.renderer.showGrid;
+      return false;
     }
     return false;
   }
@@ -89,7 +91,9 @@ export class ModelViewerCore {
 
   public async initialize(ctx: WebGL2RenderingContext) {
     if (this.initialized) return;
+    ctx.getExtension('EXT_color_buffer_float');
     const webgl = new WebGL(ctx);
+    webgl.enable('cull_face', 'depth', 'blend');
     const camera = new Camera(
       webgl,
       (Math.PI / 180) * 65,
@@ -102,14 +106,39 @@ export class ModelViewerCore {
     const assetManager = new AssetManager(webgl);
     this.assetManager = assetManager;
     await load_defaults(assetManager); // Must be loaded before scene is created @TODO: Must fix
-    const renderer = new Renderer(webgl, camera, assetManager);
+
+    const gBufferShader = assetManager.getShader('g-buffer');
+    if (!gBufferShader) throw new Error('could not find "g-buffer" shader');
+    const lightShader = assetManager.getShader('lights');
+    if (!lightShader) throw new Error('could not find "lights" shader');
+    const screenShader = assetManager.getShader('screen');
+    if (!screenShader) throw new Error('could not find "screen" shader');
+
+    const renderer = new Renderer(
+      webgl,
+      [1024, 768],
+      lightShader,
+      screenShader,
+      gBufferShader,
+      assetManager,
+    );
+    renderer.setupUBO({
+      material: [gBufferShader],
+      model: [gBufferShader, lightShader, screenShader],
+      lights: [lightShader],
+    });
+    camera.setupUBO([gBufferShader]);
+    gBufferShader.bind();
+    gBufferShader.uniform('u_texture_albedo', { type: 'texture', value: 16 });
+    gBufferShader.unbind();
+
     this.webgl = webgl;
     this.camera = camera;
     this.renderer = renderer;
 
     webgl.registerController(this.controller);
 
-    const renderSystem = new MeshRenderSystem(renderer);
+    const renderSystem = new MeshRenderSystem(renderer, camera);
     this.ecs.registerSystem('Render', renderSystem);
     const lightSystem = new LightSystem();
     this.ecs.registerSystem('Lights', lightSystem);
@@ -121,11 +150,6 @@ export class ModelViewerCore {
   public render() {
     this.ecs.runSystem('Lights');
     this.ecs.runSystem('Render');
-  }
-
-  public draw() {
-    this.render();
-    requestAnimationFrame(this.draw.bind(this));
   }
 
   // Entity API

@@ -27,6 +27,7 @@ export type TextureConfig = {
   internalFormat?:
     | typeof WebGL2RenderingContext.RGBA
     | typeof WebGL2RenderingContext.RGBA16F
+    | typeof WebGL2RenderingContext.RGBA8
     | typeof WebGL2RenderingContext.DEPTH_COMPONENT24
     | typeof WebGL2RenderingContext.DEPTH_STENCIL;
   format?:

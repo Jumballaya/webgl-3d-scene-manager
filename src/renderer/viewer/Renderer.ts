@@ -1,87 +1,87 @@
 import { WebGL } from '../gl/WebGL';
-import { mat4, vec3 } from 'gl-matrix';
-import { Camera } from './Camera';
-import { UBO } from '../gl/UBO';
-import { Surface } from '../gl/Surface';
-import { LightManager } from './light/LightManager';
-import { Mesh } from './Mesh';
-import { GridMesh } from './GridMesh';
-import { Entity } from './ecs/Entity';
 import { Transform } from '../math/Transform';
+import { QuadGeometry } from './geometry/QuadGeometry';
+import { vec2, vec3 } from 'gl-matrix';
+import { Geometry } from './geometry/Geometry';
+import { UBO } from '../gl/UBO';
+import { FrameBuffer } from '../gl/FrameBuffer';
+import { Shader } from '../gl/Shader';
+import { PostProccessStep } from './PostProcessingStep';
+import { GridMesh } from './GridMesh';
 import { AssetManager } from '../assets/AssetManager';
-import { Light } from './light/Light';
+import { LightManager } from './light/LightManager';
 import { LightTypes } from './light/types/light-types.type';
+import { Light } from './light/Light';
+import { Camera } from './Camera';
 
-/**
- *    Render pipeline:
- *
- *      { renderCalls, renderOptions } -> (renderStep: [ surface ])-> { renderCalls, renderOptions } -> etc.
- *
- *
- *      Chainable modules that:
- *          1. Has a surface to draw to
- *          2. Has a set of draw calls
- *          3. Has draw options and outputs set up
- *          4. Has renderer and scene options for clearing/enable/disable/transparency/etc.
- *          5. Has nothing to do with the ECS
- *          6. Chain together to create the G-buffer
- *
- *
- *          stage 1: Draw Objects
- *              Input  -> Objects to draw
- *              Output -> Color, position and normals [, emissive, specular]
- *
- *          stage 2: Light
- *              Input  -> Textures from step 1 and light data
- *              Output -> Lit scene
- *
- *          stage [3 - infinite]: Post Processing
- *              Input  -> Lit scene from step 2
- *              Output -> Processed image
- *
- *
- *        Users can create PostProcessing steps and register/enable/disable them
- *
- *        Built in PostProcessing:
- *          - Bloom
- *          - MSAA
- *
- */
+type MeshRenderCall = {
+  geometry: Geometry;
+  transform: Transform;
+};
 
-// @TODO:
-//        re-create hover functionality elsewhere
-//        extract grid floor out
-//        remove any ECS stuff (entity references) out to the MeshRenderSystem
-//              -- meaning: renderer should accept a list of render calls
-//
+const fragment = (id: number, frag: string) => `#version 300 es
+
+precision mediump float;
+
+in vec2 v_uv;
+uniform sampler2D u_texture;
+uniform vec2 u_screensize;
+
+layout(location=${id}) out vec4 outColor;
+
+${frag}`;
+const vertex = (code?: string) => `#version 300 es
+
+layout(location=0) in vec4 a_position;
+layout(location=1) in vec2 a_uv;
+
+out vec2 v_uv;
+
+${
+  code ??
+  `void main() {
+  gl_Position = a_position;
+  v_uv = a_uv;
+}`
+}`;
+
 export class Renderer {
   private webgl: WebGL;
-  private camera: Camera;
   private modelUBO: UBO;
   private materialUBO: UBO;
+  private gBufferFBO: FrameBuffer;
+  private lightFBO: FrameBuffer;
 
+  private lightManager: LightManager;
+
+  private size: vec2;
   private clearColor: vec3 = [1, 1, 1];
   private _darkMode = false;
   private gridFloor: GridMesh;
-  private lightManager: LightManager;
-  private assetManager: AssetManager;
 
-  public showGrid = true;
+  private quadGeometry: QuadGeometry;
+  private screenTrans = new Transform();
+  private lightShader: Shader;
+  private screenShader: Shader;
+  private gBufferShader: Shader;
 
-  constructor(webgl: WebGL, camera: Camera, assetManager: AssetManager) {
-    this.camera = camera;
-    this.webgl = webgl;
-    this.assetManager = assetManager;
-    webgl.enable('depth', 'cull_face', 'blend');
-    webgl.blendFunc(
-      WebGL2RenderingContext.SRC_ALPHA,
-      WebGL2RenderingContext.ONE_MINUS_SRC_ALPHA,
-    );
+  private postProccessStack: PostProccessStep[] = [];
+  private stack: MeshRenderCall[] = [];
+
+  constructor(
+    webgl: WebGL,
+    size: vec2,
+    lightShader: Shader,
+    screenShader: Shader,
+    gBufferShader: Shader,
+    assetManager: AssetManager,
+  ) {
     this.modelUBO = webgl.createUBO('Model', [
       { name: 'matrix', type: 'mat4' },
       { name: 'inv_trans_matrix', type: 'mat4' },
       { name: 'id', type: 'vec4' },
     ]);
+
     this.materialUBO = webgl.createUBO('Material', [
       { name: 'ambient', type: 'vec4' },
       { name: 'diffuse', type: 'vec4' },
@@ -89,16 +89,48 @@ export class Renderer {
       { name: 'opacity', type: 'vec4' },
       { name: 'textures', type: 'vec4' },
     ]);
-    this.lightManager = new LightManager(webgl);
-    this.setupUbos({
-      model: ['lights', 'grid'],
-      material: ['lights'],
-      camera: ['lights', 'screen', 'grid'],
-      lights: ['lights'],
+    this.materialUBO.bind();
+    this.materialUBO.set('diffuse', [1, 0, 0, 1]);
+    this.webgl = webgl;
+    this.size = size;
+
+    const fbo = webgl.createFrameBuffer();
+    fbo.attachment({
+      type: 'color',
+      size,
     });
+    fbo.attachment({
+      type: 'color',
+      size,
+    });
+    fbo.attachment({
+      type: 'color',
+      size,
+    });
+    fbo.attachment({
+      type: 'depth',
+      size,
+    });
+    webgl.drawBuffers(fbo.getDrawBuffers());
+    fbo.unbind();
+    this.gBufferFBO = fbo;
+
+    this.lightFBO = webgl.createFrameBuffer(3);
+    this.lightFBO.attachment({
+      type: 'color',
+      size,
+    });
+    webgl.drawBuffers(this.lightFBO.getDrawBuffers());
+    this.lightFBO.unbind();
+
+    this.quadGeometry = new QuadGeometry(webgl, 'quad');
+    this.lightShader = lightShader;
+    this.screenShader = screenShader;
+    this.gBufferShader = gBufferShader;
 
     this.backgroundColor = [0.92, 0.92, 0.92];
     this.gridFloor = new GridMesh(webgl, assetManager, [30, 30]);
+    this.lightManager = new LightManager(webgl);
   }
 
   public get backgroundColor(): vec3 {
@@ -125,24 +157,21 @@ export class Renderer {
     }
   }
 
-  public render(entities: Entity[]) {
-    this.webgl.clear('color', 'depth');
-    this.webgl.viewport(0, 0, this.camera.screenSize);
-    this.camera.update();
-    const seen = new Set<number>();
-
-    // Render System
-    for (const ent of entities) {
-      this.renderEntity(ent, seen);
+  public setupUBO(setups: Record<'model' | 'material' | 'lights', Shader[]>) {
+    this.materialUBO.bind();
+    for (const shader of setups.material ?? []) {
+      this.materialUBO.setupShader(shader);
     }
+    this.materialUBO.unbind();
 
-    if (this.showGrid) {
-      this.gridFloor.draw(
-        this.webgl,
-        this.modelUBO,
-        this.materialUBO,
-        this.gridFloor.transform,
-      );
+    this.modelUBO.bind();
+    for (const shader of setups.model ?? []) {
+      this.modelUBO.setupShader(shader);
+    }
+    this.modelUBO.unbind();
+
+    if (setups.lights.length) {
+      this.lightManager.registerShaders(setups.lights);
     }
   }
 
@@ -155,59 +184,105 @@ export class Renderer {
     this.lightManager.removeLight(light);
   }
 
-  private renderEntity(ent: Entity, seen: Set<number>, transform?: Transform) {
-    if (seen.has(ent.id)) return;
-    seen.add(ent.id);
-    const meshComp = ent.getComponent<Mesh>('Mesh');
-    const transComp = ent.getComponent<Transform>('Transform');
-    const appliedTransform = transComp?.data?.clone() ?? new Transform();
-    if (transform) {
-      appliedTransform.add(transform);
-    }
-    if (meshComp && transComp) {
-      meshComp.data.draw(
-        this.webgl,
-        this.modelUBO,
-        this.materialUBO,
-        appliedTransform,
-      );
+  public render(camera: Camera) {
+    camera.update();
+    this.gBufferStage();
+    this.lightsStage();
+
+    let texValue = 3;
+    for (const postProcess of this.postProccessStack) {
+      postProcess.draw(texValue);
+      texValue++;
     }
 
-    for (const child of ent.children) {
-      this.renderEntity(child, seen, appliedTransform);
-    }
+    this.quadGeometry.bind();
+    this.screenShader.bind();
+    this.screenShader.uniform('u_texture', {
+      type: 'texture',
+      value: texValue,
+    });
+    this.webgl.drawArrays(this.quadGeometry.vertexCount, 'triangles');
+    this.screenShader.unbind();
+    this.quadGeometry.unbind();
   }
 
-  private setupUbos(config: {
-    model: string[];
-    material: string[];
-    camera: string[];
-    lights: string[];
-  }) {
+  public add(geometry: Geometry, transform: Transform) {
+    this.stack.push({
+      geometry,
+      transform,
+    });
+  }
+
+  public createPostProcessStep(name: string, code: string) {
+    const texId = 4 + this.postProccessStack.length;
+    const step = new PostProccessStep(
+      this.webgl,
+      this.webgl.createShader(name, vertex(), fragment(texId, code)),
+      this.size,
+      texId,
+    );
+    this.postProccessStack.push(step);
+  }
+
+  private renderMesh(mesh: MeshRenderCall) {
+    mesh.geometry.bind();
+    this.gBufferShader.bind();
+
     this.modelUBO.bind();
-    this.modelUBO.set('matrix', mat4.create());
-    for (const shader of config.model) {
-      const shad = this.assetManager.getShader(shader);
-      if (shad) {
-        this.modelUBO.setupShader(shad);
-      }
-    }
+    this.modelUBO.set('matrix', mesh.transform.matrix);
+    this.modelUBO.set('inv_trans_matrix', mesh.transform.invTrans);
     this.modelUBO.unbind();
 
     this.materialUBO.bind();
-    for (const shader of config.material) {
-      const shad = this.assetManager.getShader(shader);
-      if (shad) {
-        this.materialUBO.setupShader(shad);
-      }
-    }
+    this.materialUBO.set('textures', [0, 0, 0, 0]);
     this.materialUBO.unbind();
 
-    this.camera.setupUBO(
-      config.camera.map((s) => this.assetManager.getShader(s)!),
-    );
-    this.lightManager.registerShaders(
-      config.lights.map((s) => this.assetManager.getShader(s)!),
-    );
+    this.webgl.drawArrays(mesh.geometry.vertexCount, 'triangles');
+    mesh.geometry.unbind();
+    this.gBufferShader.unbind();
+  }
+
+  private gBufferStage() {
+    this.gBufferFBO.bind();
+    this.webgl.clearColor(this.backgroundColor);
+    this.webgl.viewport(0, 0, this.size);
+    this.webgl.clear('color', 'depth');
+
+    while (this.stack.length) {
+      const mesh = this.stack.pop();
+      if (mesh) {
+        this.renderMesh(mesh);
+      }
+    }
+
+    // this.gridFloor.draw(
+    //   this.webgl,
+    //   this.modelUBO,
+    //   this.materialUBO,
+    //   this.gridFloor.transform,
+    // );
+
+    this.gBufferFBO.unbind();
+  }
+
+  private lightsStage() {
+    this.lightFBO.bind();
+    this.webgl.clearColor(this.backgroundColor);
+    this.quadGeometry.bind();
+    this.lightShader.bind();
+    this.modelUBO.bind();
+    this.modelUBO.set('matrix', this.screenTrans.matrix);
+    this.modelUBO.set('inv_trans_matrix', this.screenTrans.invTrans);
+    this.modelUBO.unbind();
+    this.lightShader.uniform('u_texture_color', { type: 'texture', value: 0 });
+    this.lightShader.uniform('u_texture_position', {
+      type: 'texture',
+      value: 1,
+    });
+    this.lightShader.uniform('u_texture_normal', { type: 'texture', value: 2 });
+    this.webgl.drawArrays(this.quadGeometry.vertexCount, 'triangles');
+    this.lightShader.unbind();
+    this.quadGeometry.unbind();
+    this.lightFBO.unbind();
   }
 }

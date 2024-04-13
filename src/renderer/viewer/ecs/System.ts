@@ -1,7 +1,9 @@
 import { Transform } from '../../math/Transform';
-import { Renderer } from '../Renderer';
+import { Renderer } from '@/Renderer';
 import { Entity } from './Entity';
 import { Light } from '../light/Light';
+import { Mesh } from '../Mesh';
+import { Camera } from '../Camera';
 
 export type System = {
   requiredComponents: string[];
@@ -12,13 +14,25 @@ export class MeshRenderSystem implements System {
   public requiredComponents = ['Transform', 'Mesh'];
 
   private renderer: Renderer;
+  private camera: Camera;
 
-  constructor(renderer: Renderer) {
+  constructor(renderer: Renderer, camera: Camera) {
     this.renderer = renderer;
+    this.camera = camera;
   }
 
   public run(entities: Entity[]) {
-    this.renderer.render(entities);
+    for (const entity of entities) {
+      const mesh = entity.getComponent<Mesh>('Mesh')?.data;
+      const transfrom = entity.getComponent<Transform>('Transform')?.data;
+      if (mesh && transfrom) {
+        const { geometry } = mesh;
+        if (geometry) {
+          this.renderer.add(geometry, transfrom);
+        }
+      }
+    }
+    this.renderer.render(this.camera);
   }
 }
 

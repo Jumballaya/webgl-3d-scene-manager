@@ -9,19 +9,20 @@ const CanvasViewer = () => {
   const mvc = useModelViewerCore();
   const entityStore = useEntityStore();
   const { theme } = useTheme();
-  const [drawer] = useState<(ctx: WebGL2RenderingContext, dt: number) => void>(
-    mvc.draw.bind(mvc),
-  );
+  const [drawer] = useState(() => mvc.render.bind(mvc));
 
-  const initialize = useCallback(async (context: WebGL2RenderingContext) => {
-    await mvc.initialize(context).catch((e) => console.log(e));
-    mvc.setEntityStore(entityStore);
-    if (theme === 'dark') {
-      mvc.darkMode = true;
-    } else {
-      mvc.darkMode = false;
-    }
-  }, []);
+  const initialize = useCallback(
+    async (context: WebGL2RenderingContext) => {
+      await mvc.initialize(context).catch((e) => console.log(e));
+      mvc.setEntityStore(entityStore);
+      if (theme === 'dark') {
+        mvc.darkMode = true;
+      } else {
+        mvc.darkMode = false;
+      }
+    },
+    [mvc],
+  );
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -29,7 +30,7 @@ const CanvasViewer = () => {
     } else {
       mvc.darkMode = false;
     }
-  }, [theme]);
+  }, [theme, mvc]);
 
   return (
     <div>
