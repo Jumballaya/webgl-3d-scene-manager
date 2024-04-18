@@ -16,6 +16,7 @@ import { Material } from '@/renderer/viewer/material/Material';
 import { Light } from '@/renderer/viewer/light/Light';
 import { LightSystem, MeshRenderSystem } from '@/renderer/viewer/ecs/System';
 import { Renderer } from '@/renderer/viewer/Renderer';
+import { apply_sobel } from './sobel_effect';
 
 ///////
 //
@@ -49,19 +50,25 @@ export class ModelViewerCore {
 
   public initialized = false;
 
+  public element: HTMLCanvasElement;
+
   constructor() {
     const input = new ArcballCamera(
       [0, 1, -5],
       [0, 0, 0],
       [0, 1, 0],
       10,
-      [1024, 768],
+      [800, 600],
     );
     const controller = new Controller();
     input.registerController(controller);
     this.input = input;
     this.controller = controller;
     this.ecs = new ECS();
+
+    this.element = document.createElement('canvas');
+    this.element.width = 800;
+    this.element.height = 600;
   }
 
   public set darkMode(darkMode: boolean) {
@@ -88,7 +95,9 @@ export class ModelViewerCore {
     this.entityStore = es;
   }
 
-  public async initialize(ctx: WebGL2RenderingContext) {
+  public async initialize() {
+    const ctx = this.element.getContext('webgl2');
+    if (!ctx) throw new Error('could not create webgl2 rendering context');
     if (this.initialized) return;
     ctx.getExtension('EXT_color_buffer_float');
     const webgl = new WebGL(ctx);
@@ -132,6 +141,8 @@ export class ModelViewerCore {
     gBufferShader.bind();
     gBufferShader.uniform('u_texture_albedo', { type: 'texture', value: 16 });
     gBufferShader.unbind();
+
+    apply_sobel(renderer);
 
     this.webgl = webgl;
     this.camera = camera;

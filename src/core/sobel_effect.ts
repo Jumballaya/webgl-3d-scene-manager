@@ -1,4 +1,4 @@
-import { Renderer } from '@/Renderer';
+import { Renderer } from '@/renderer/viewer/Renderer';
 
 export function apply_sobel(renderer: Renderer) {
   renderer.createPostProcessStep(
