@@ -1,21 +1,21 @@
-import { ArcballCamera } from '@/renderer/controls/Arcball';
-import { Controller } from '@/renderer/controls/Controller';
-import { WebGL } from '@/renderer/gl/WebGL';
-import { Camera } from '@/renderer/viewer/Camera';
+import { ArcballCamera } from '@/engine/controls/Arcball';
+import { Controller } from '@/engine/controls/Controller';
+import { WebGL } from '@/engine/render/gl/WebGL';
+import { Camera } from '@/engine/render/Camera';
 import { load_defaults } from './load_defaults';
 import { EntityStoreState } from '@/store/entityStore';
-import { ECS } from '@/renderer/viewer/ecs/ECS';
-import { Entity } from '@/renderer/viewer/ecs/Entity';
-import { Transform } from '@/renderer/math/Transform';
-import { AssetManager } from '@/renderer/assets/AssetManager';
-import { Mesh } from '@/renderer/viewer/Mesh';
-import { LightTypes } from '@/renderer/viewer/light/types/light-types.type';
-import { LoaderEntry } from '@/renderer/viewer/Loader';
-import { LitMaterial } from '@/renderer/viewer/material/LitMaterial';
-import { Material } from '@/renderer/viewer/material/Material';
-import { Light } from '@/renderer/viewer/light/Light';
-import { LightSystem, MeshRenderSystem } from '@/renderer/viewer/ecs/System';
-import { Renderer } from '@/renderer/viewer/Renderer';
+import { ECS } from '@/engine/ecs/ECS';
+import { Entity } from '@/engine/ecs/Entity';
+import { Transform } from '@/engine/math/Transform';
+import { AssetManager } from '@/engine/assets/AssetManager';
+import { Mesh } from '@/engine/render/mesh/Mesh';
+import { LightTypes } from '@/engine/render/light/types/light-types.type';
+import { LoaderEntry } from '@/engine/assets/Loader';
+import { LitMaterial } from '@/engine/render/material/LitMaterial';
+import { Material } from '@/engine/render/material/Material';
+import { Light } from '@/engine/render/light/Light';
+import { LightSystem, MeshRenderSystem } from '@/engine/ecs/System';
+import { Renderer } from '@/engine/render/Renderer';
 import { apply_sobel } from './sobel_effect';
 
 ///////

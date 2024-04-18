@@ -1,9 +1,9 @@
-import { Transform } from '../../math/Transform';
-import { Renderer } from '@/renderer/viewer/Renderer';
+import { Transform } from '@/engine/math/Transform';
+import { Renderer } from '@/engine/render/Renderer';
 import { Entity } from './Entity';
-import { Light } from '../light/Light';
-import { Mesh } from '../Mesh';
-import { Camera } from '../Camera';
+import { Light } from '@/engine/render/light/Light';
+import { Mesh } from '@/engine/render/mesh/Mesh';
+import { Camera } from '@/engine/render/Camera';
 
 export type System = {
   requiredComponents: string[];

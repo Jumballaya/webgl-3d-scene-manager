@@ -1,20 +1,20 @@
 import { vec3, vec4 } from 'gl-matrix';
-import { UBO } from '../../gl/UBO';
+import { UBO } from '@/engine/render/gl/UBO';
 import { Material } from './Material';
 import { PhongMaterialConfig } from './types/phong-material-config.type';
-import { AssetManager } from '@/renderer/assets/AssetManager';
+import { AssetManager } from '@/engine/assets/AssetManager';
 
-type PhongMaterialValues = {
+type LitMaterialValues = {
   albedo?: string;
   normal_map?: string;
   specular_map?: string;
-  ambient: vec3;
-  specular: vec3;
-  diffuse: vec3;
-  opacity: number;
+  ambient?: vec3;
+  specular?: vec3;
+  diffuse?: vec3;
+  opacity?: number;
 };
 
-export class PhongMaterial extends Material {
+export class LitMaterial extends Material {
   public albedo: string;
   public normal_map: string;
   public specular_map: string;
@@ -23,26 +23,26 @@ export class PhongMaterial extends Material {
   public specular: vec3;
   public diffuse: vec3;
 
-  private config: PhongMaterialConfig;
+  private config?: PhongMaterialConfig;
 
   constructor(
     assetManager: AssetManager,
     shader: string,
     name: string,
-    config: PhongMaterialConfig,
+    config?: PhongMaterialConfig,
   ) {
     super(assetManager, shader, name);
     this.config = config;
-    this.albedo = config.albedo_texture || '';
-    this.normal_map = config.normal_texture || '';
-    this.specular_map = config.specular_texture || '';
-    this.ambient = config.ambient || [1, 1, 1];
-    this.specular = config.specular || [1, 1, 1];
-    this.diffuse = config.diffuse || [1, 1, 1];
-    this.opacity = config.opacity ?? 1;
+    this.albedo = config?.albedo_texture || 'none';
+    this.normal_map = config?.normal_texture || 'none';
+    this.specular_map = config?.specular_texture || 'none';
+    this.ambient = config?.ambient || [1, 1, 1];
+    this.specular = config?.specular || [1, 1, 1];
+    this.diffuse = config?.diffuse || [1, 1, 1];
+    this.opacity = config?.opacity ?? 1;
   }
 
-  public setValues(values: PhongMaterialValues) {
+  public setValues(values: LitMaterialValues) {
     this.normal_map = values.normal_map ?? this.normal_map;
     this.specular_map = values.specular_map ?? this.specular_map;
     this.albedo = values.albedo ?? this.albedo;
@@ -53,16 +53,14 @@ export class PhongMaterial extends Material {
   }
 
   public clone() {
-    return new PhongMaterial(this.assetManager, this.shader, this.config);
+    return new LitMaterial(this.assetManager, this.shader, this.config);
   }
 
   public bindUbo(ubo: UBO) {
     ubo.bind();
-    this.assetManager.getShader(this.shader)?.bind();
     const albedoTexId = this.assetManager.getTexture(this.albedo)?.id ?? 16;
-    const normalTexId = this.assetManager.getTexture(this.normal_map)?.id ?? 16;
-    const specularTexId =
-      this.assetManager.getTexture(this.specular_map)?.id ?? 16;
+    // const normalTexId = this.webgl.textures[this.normal_map]?.id ?? 16;
+    // const specularTexId = this.webgl.textures[this.specular_map]?.id ?? 16;
 
     const a = this.ambient;
     const s = this.specular;
@@ -78,15 +76,8 @@ export class PhongMaterial extends Material {
       type: 'texture',
       value: albedoTexId,
     });
-    this.assetManager.getShader(this.shader)?.uniform('u_texture_normal', {
-      type: 'texture',
-      value: normalTexId,
-    });
-    this.assetManager.getShader(this.shader)?.uniform('u_texture_specular', {
-      type: 'texture',
-      value: specularTexId,
-    });
-    this.assetManager.getShader(this.shader)?.unbind();
+    //this.webgl.shaders[this.shader]?.uniform('u_texture_normal', { type: 'texture', value: normalTexId });
+    //this.webgl.shaders[this.shader]?.uniform('u_texture_specular', { type: 'texture', value: specularTexId });
     ubo.unbind();
   }
 
@@ -103,11 +94,14 @@ export class PhongMaterial extends Material {
     this.assetManager.getTexture(this.normal_map)?.unbind();
     this.assetManager.getTexture(this.specular_map)?.unbind();
   }
+
   private textureList(): vec4 {
     return [
-      this.albedo !== '' ? 1 : 0,
-      this.normal_map !== '' ? 1 : 0,
-      this.specular_map !== '' ? 1 : 0,
+      this.albedo !== 'none' ? 1 : 0,
+      //this.normal_map !== '' ? 1 : 0,
+      //this.specular_map !== '' ? 1 : 0,
+      0,
+      0,
       0,
     ];
   }

@@ -1,4 +1,4 @@
-import { VertexArray } from '../../gl/VertexArray';
+import { VertexArray } from '@/engine/render/gl/VertexArray';
 
 export class Geometry {
   protected vertexArray: VertexArray;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SerializedEntity } from '@/renderer/viewer/ecs/Entity';
+import { SerializedEntity } from '@/engine/ecs/Entity';
 import { EntityListItem } from './EntityListItem';
 
 type EntityListParentProps = {

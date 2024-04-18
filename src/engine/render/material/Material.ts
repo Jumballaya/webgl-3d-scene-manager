@@ -1,6 +1,6 @@
-import { AssetManager } from '@/renderer/assets/AssetManager';
-import { UBO } from '../../gl/UBO';
-import { Uniform } from '../../gl/types/uniforms.type';
+import { AssetManager } from '@/engine/assets/AssetManager';
+import { UBO } from '@/engine/render/gl/UBO';
+import { Uniform } from '@/engine/render/gl/types/uniforms.type';
 
 export class Material {
   protected assetManager: AssetManager;

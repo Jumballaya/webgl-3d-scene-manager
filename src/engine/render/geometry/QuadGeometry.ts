@@ -1,4 +1,4 @@
-import { WebGL } from '../../gl/WebGL';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { Geometry } from './Geometry';
 
 const buffers = [

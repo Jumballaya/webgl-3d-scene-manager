@@ -1,5 +1,5 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
-import { AssetManager } from '@/renderer/assets/AssetManager';
+import { AssetManager } from '@/engine/assets/AssetManager';
 import {
   Select,
   SelectContent,

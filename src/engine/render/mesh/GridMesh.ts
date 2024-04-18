@@ -1,10 +1,10 @@
 import { vec2 } from 'gl-matrix';
-import { WebGL } from '../gl/WebGL';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { Mesh } from './Mesh';
-import { QuadGeometry } from './geometry/QuadGeometry';
-import { Material } from './material/Material';
-import { Transform } from '../math/Transform';
-import { AssetManager } from '../assets/AssetManager';
+import { QuadGeometry } from '@/engine/render/geometry/QuadGeometry';
+import { Material } from '@/engine/render/material/Material';
+import { Transform } from '@/engine/math/Transform';
+import { AssetManager } from '@/engine/assets/AssetManager';
 
 export class GridMesh extends Mesh {
   private _darkMode: boolean = false;

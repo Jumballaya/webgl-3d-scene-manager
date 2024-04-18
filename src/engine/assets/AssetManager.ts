@@ -8,14 +8,14 @@
  *
  */
 
-import { Shader } from '../gl/Shader';
-import { Texture } from '../gl/Texture';
-import { WebGL } from '../gl/WebGL';
-import { Loader, LoaderEntry } from '../viewer/Loader';
-import { Mesh } from '../viewer/Mesh';
-import { Geometry } from '../viewer/geometry/Geometry';
-import { QuadGeometry } from '../viewer/geometry/QuadGeometry';
-import { Material } from '../viewer/material/Material';
+import { Shader } from '../render/gl/Shader';
+import { Texture } from '../render/gl/Texture';
+import { WebGL } from '../render/gl/WebGL';
+import { Loader, LoaderEntry } from './Loader';
+import { Mesh } from '../render/mesh/Mesh';
+import { Geometry } from '../render/geometry/Geometry';
+import { QuadGeometry } from '../render/geometry/QuadGeometry';
+import { Material } from '../render/material/Material';
 
 export class AssetManager {
   private textures: Map<string, Texture> = new Map();

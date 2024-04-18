@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shadcn/ui/card';
 import { Label } from '@/shadcn/ui/label';
 import { Button } from '@/shadcn/ui/button';
-import { SpotLight } from '@/renderer/viewer/light/SpotLight';
+import { SpotLight } from '@/engine/render/light/SpotLight';
 import { useState } from 'react';
 import { FormItem } from '@/shadcn/ui/form';
 import { Input } from '@/shadcn/ui/input';

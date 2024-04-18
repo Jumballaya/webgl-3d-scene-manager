@@ -1,7 +1,7 @@
-import { vec3 } from "gl-matrix";
-import { Light } from "./Light";
-import { LightManager } from "./LightManager";
-import { WebGL } from "../../gl/WebGL";
+import { vec3 } from 'gl-matrix';
+import { Light } from './Light';
+import { LightManager } from './LightManager';
+import { WebGL } from '@/engine/render/gl/WebGL';
 
 export class SpotLight extends Light {
   private _direction: vec3 = [0, 0, 0];
@@ -10,7 +10,7 @@ export class SpotLight extends Light {
   private _outerAngle: number = Math.PI / 3;
 
   constructor(manager: LightManager, webgl: WebGL) {
-    super(manager, "spot", webgl);
+    super(manager, 'spot', webgl);
   }
 
   public get direction(): vec3 {

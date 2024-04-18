@@ -6,7 +6,7 @@ import { useEntityStore } from '@/store/entityStore';
 import { useEffect, useState } from 'react';
 import { Button } from '@/shadcn/ui/button';
 import useModelViewerCore from '@/core/useModelViewerCore';
-import { Transform } from '@/renderer/math/Transform';
+import { Transform } from '@/engine/math/Transform';
 
 function AddTransform() {
   const mvc = useModelViewerCore();

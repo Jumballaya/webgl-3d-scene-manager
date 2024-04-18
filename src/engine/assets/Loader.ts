@@ -1,16 +1,16 @@
-import { AssetManager } from '../assets/AssetManager';
+import { AssetManager } from './AssetManager';
 import {
   loadObj,
   loadGeometry,
   loadObjFileGeometries,
   loadMtlFileMaterial,
-} from '../assets/obj-loader';
-import { Shader } from '../gl/Shader';
-import { Texture } from '../gl/Texture';
-import { WebGL } from '../gl/WebGL';
-import { Mesh } from './Mesh';
-import { Geometry } from './geometry/Geometry';
-import { Material } from './material/Material';
+} from './obj-loader';
+import { Shader } from '../render/gl/Shader';
+import { Texture } from '../render/gl/Texture';
+import { WebGL } from '../render/gl/WebGL';
+import { Mesh } from '../render/mesh/Mesh';
+import { Geometry } from '../render/geometry/Geometry';
+import { Material } from '../render/material/Material';
 
 export type LoaderEntry =
   | TextureNetworkEntry

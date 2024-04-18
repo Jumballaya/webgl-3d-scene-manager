@@ -1,9 +1,9 @@
-import { Geometry } from '../viewer/geometry/Geometry';
-import { WebGL } from '../gl/WebGL';
+import { Geometry } from '../render/geometry/Geometry';
+import { WebGL } from '../render/gl/WebGL';
 import { ObjFile } from './obj/ObjFile';
-import { Material } from '../viewer/material/Material';
-import { LitMaterial } from '../viewer/material/LitMaterial';
-import { Mesh } from '../viewer/Mesh';
+import { Material } from '../render/material/Material';
+import { LitMaterial } from '../render/material/LitMaterial';
+import { Mesh } from '../render/mesh/Mesh';
 import { AssetManager } from './AssetManager';
 import { MtlFile } from './obj/MtlFile';
 

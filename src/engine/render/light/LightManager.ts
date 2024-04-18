@@ -1,6 +1,6 @@
-import { Shader } from '../../gl/Shader';
-import { UBO } from '../../gl/UBO';
-import { WebGL } from '../../gl/WebGL';
+import { Shader } from '@/engine/render/gl/Shader';
+import { UBO } from '@/engine/render/gl/UBO';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { Light } from './Light';
 import { PointLight } from './PointLight';
 import { SpotLight } from './SpotLight';

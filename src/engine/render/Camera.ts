@@ -1,8 +1,8 @@
-import { WebGL } from '../gl/WebGL';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { mat4, vec2, vec4 } from 'gl-matrix';
-import { UBO } from '../gl/UBO';
+import { UBO } from '@/engine/render/gl/UBO';
 import { CameraController } from '../controls/types/camera-controller';
-import { Shader } from '../gl/Shader';
+import { Shader } from '@/engine/render/gl/Shader';
 
 export class Camera {
   private input: CameraController;

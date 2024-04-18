@@ -1,4 +1,4 @@
-import { SerializedEntity } from '@/renderer/viewer/ecs/Entity';
+import { SerializedEntity } from '@/engine/ecs/Entity';
 import { create } from 'zustand';
 
 export type EntityStoreState = {

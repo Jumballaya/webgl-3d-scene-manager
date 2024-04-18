@@ -2,7 +2,7 @@ import { TooltipTrigger, Tooltip, TooltipContent } from '@/shadcn/ui/tooltip';
 import { Button } from '@/shadcn/ui/button';
 import { Box, Grid3X3, Lightbulb, Trash2 } from 'lucide-react';
 import useModelViewerCore from '@/core/useModelViewerCore';
-import { Light } from '@/renderer/viewer/light/Light';
+import { Light } from '@/engine/render/light/Light';
 
 export function EntityListCommands() {
   const mvc = useModelViewerCore();

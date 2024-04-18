@@ -1,7 +1,7 @@
 import { vec2 } from 'gl-matrix';
-import { FrameBuffer } from '../gl/FrameBuffer';
-import { Shader } from '../gl/Shader';
-import { WebGL } from '../gl/WebGL';
+import { FrameBuffer } from '@/engine/render/gl/FrameBuffer';
+import { Shader } from '@/engine/render/gl/Shader';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { Geometry } from './geometry/Geometry';
 import { QuadGeometry } from './geometry/QuadGeometry';
 

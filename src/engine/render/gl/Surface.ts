@@ -2,7 +2,7 @@ import { Shader } from './Shader';
 import { Texture } from './Texture';
 import { FrameBuffer } from './FrameBuffer';
 import { mat4, vec2 } from 'gl-matrix';
-import { Transform } from '../math/Transform';
+import { Transform } from '@/engine/math/Transform';
 import { VertexArray } from './VertexArray';
 import { UBO } from './UBO';
 

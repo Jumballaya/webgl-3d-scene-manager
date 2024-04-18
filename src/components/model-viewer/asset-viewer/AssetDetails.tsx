@@ -1,6 +1,6 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
-import { Texture } from '@/renderer/gl/Texture';
-import { Geometry } from '@/renderer/viewer/geometry/Geometry';
+import { Texture } from '@/engine/render/gl/Texture';
+import { Geometry } from '@/engine/render/geometry/Geometry';
 import { ScrollArea } from '@/shadcn/ui/scroll-area';
 
 function DetailHeader(props: { name: string }) {

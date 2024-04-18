@@ -1,6 +1,6 @@
-import { Transform } from '@/renderer/math/Transform';
-import { Mesh } from '../Mesh';
-import { Light } from '../light/Light';
+import { Transform } from '@/engine/math/Transform';
+import { Mesh } from '@/engine/render/mesh/Mesh';
+import { Light } from '@/engine/render/light/Light';
 
 export class Component<T> {
   public static name = 'Component';

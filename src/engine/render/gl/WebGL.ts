@@ -10,9 +10,9 @@ import {
   VertexArrayConfig,
   VertexBufferConfig,
 } from './types/configs';
-import { Controller } from '../controls/Controller';
+import { Controller } from '@/engine/controls/Controller';
 import { UBO } from './UBO';
-import { loadImage } from '../assets/image-loader';
+import { loadImage } from '@/engine/assets/image-loader';
 import { Surface } from './Surface';
 import { FrameBuffer } from './FrameBuffer';
 

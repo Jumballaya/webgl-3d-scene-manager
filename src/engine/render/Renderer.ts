@@ -1,20 +1,19 @@
-import { WebGL } from '../gl/WebGL';
+import { WebGL } from '@/engine/render/gl/WebGL';
 import { Transform } from '../math/Transform';
 import { QuadGeometry } from './geometry/QuadGeometry';
 import { vec2, vec3 } from 'gl-matrix';
 import { Geometry } from './geometry/Geometry';
-import { UBO } from '../gl/UBO';
-import { FrameBuffer } from '../gl/FrameBuffer';
-import { Shader } from '../gl/Shader';
+import { UBO } from '@/engine/render/gl/UBO';
+import { FrameBuffer } from '@/engine/render/gl/FrameBuffer';
+import { Shader } from '@/engine/render/gl/Shader';
 import { PostProccessStep } from './PostProcessingStep';
-import { GridMesh } from './GridMesh';
+import { GridMesh } from './mesh/GridMesh';
 import { AssetManager } from '../assets/AssetManager';
 import { LightManager } from './light/LightManager';
 import { LightTypes } from './light/types/light-types.type';
 import { Light } from './light/Light';
 import { Camera } from './Camera';
 import { Material } from './material/Material';
-import { LitMaterial } from './material/LitMaterial';
 
 type MeshRenderCall = {
   geometry: Geometry;

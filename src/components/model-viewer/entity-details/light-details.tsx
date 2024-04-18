@@ -3,9 +3,9 @@ import { AddRenderComponent } from './AddRenderComponent';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shadcn/ui/card';
 import { Label } from '@/shadcn/ui/label';
 import { Button } from '@/shadcn/ui/button';
-import { PointLight } from '@/renderer/viewer/light/PointLight';
-import { SpotLight } from '@/renderer/viewer/light/SpotLight';
-import { Light } from '@/renderer/viewer/light/Light';
+import { PointLight } from '@/engine/render/light/PointLight';
+import { SpotLight } from '@/engine/render/light/SpotLight';
+import { Light } from '@/engine/render/light/Light';
 import { Mesh } from '@/renderer/viewer/Mesh';
 import {
   Select,

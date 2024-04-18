@@ -1,7 +1,7 @@
 import { vec3 } from 'gl-matrix';
 import { LightManager } from './LightManager';
 import { LightTypes } from './types/light-types.type';
-import { WebGL } from '../../gl/WebGL';
+import { WebGL } from '@/engine/render/gl/WebGL';
 
 export class Light {
   protected manager: LightManager;
