@@ -1,12 +1,17 @@
-import { ResizablePanel } from '@/shadcn/ui/resizable';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/shadcn/ui/resizable';
 import { Separator } from '@/shadcn/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/ui/tabs';
 import CanvasViewer from '../CanvasViewer';
+import { TextEditor } from './TextEditor';
 
 export default function MiddleSection() {
   return (
     <ResizablePanel minSize={30}>
-      <Tabs defaultValue="viewer">
+      <Tabs defaultValue="viewer" style={{ height: '100%' }}>
         <div className="flex items-center px-4 py-2">
           <TabsList className="ml-auto">
             <TabsTrigger
@@ -24,13 +29,33 @@ export default function MiddleSection() {
           </TabsList>
         </div>
         <Separator />
-        <TabsContent value="viewer" className="m-0">
-          <div className="w-100 h-100 flex items-center justify-center my-6">
-            <CanvasViewer />
-          </div>
+        <TabsContent value="viewer" className="m-0 h-full">
+          <ResizablePanelGroup
+            direction="vertical"
+            className="items-stretch h-full"
+          >
+            <ResizablePanel>
+              <div className="w-100 h-100 flex flex-col items-center justify-center my-6">
+                <CanvasViewer />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel maxSize={28} minSize={20}></ResizablePanel>
+          </ResizablePanelGroup>
         </TabsContent>
-        <TabsContent value="editor" className="m-0">
-          Script Editor Page
+        <TabsContent value="editor" className="m-0 h-full">
+          <ResizablePanelGroup
+            direction="vertical"
+            className="items-stretch h-full"
+          >
+            <ResizablePanel>
+              <div className="flex items-center justify-center h-full">
+                <TextEditor code="" />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel maxSize={28} minSize={20}></ResizablePanel>
+          </ResizablePanelGroup>
         </TabsContent>
       </Tabs>
     </ResizablePanel>
