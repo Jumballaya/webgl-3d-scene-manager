@@ -72,15 +72,14 @@ export class ModelViewerCore {
 
   public set showGrid(show: boolean) {
     if (this.renderer) {
-      // this.renderer.showGrid = show;
+      this.renderer.showGrid = show;
       return;
     }
   }
 
   public get showGrid(): boolean {
     if (this.renderer) {
-      // return this.renderer.showGrid;
-      return false;
+      return this.renderer.showGrid;
     }
     return false;
   }
@@ -113,6 +112,8 @@ export class ModelViewerCore {
     if (!lightShader) throw new Error('could not find "lights" shader');
     const screenShader = assetManager.getShader('screen');
     if (!screenShader) throw new Error('could not find "screen" shader');
+    const gridShader = assetManager.getShader('grid');
+    if (!gridShader) throw new Error('could not find "grid" shader');
 
     const renderer = new Renderer(
       webgl,
@@ -124,10 +125,10 @@ export class ModelViewerCore {
     );
     renderer.setupUBO({
       material: [gBufferShader],
-      model: [gBufferShader, lightShader, screenShader],
+      model: [gBufferShader, lightShader, screenShader, gridShader],
       lights: [lightShader],
     });
-    camera.setupUBO([gBufferShader]);
+    camera.setupUBO([gBufferShader, gridShader]);
     gBufferShader.bind();
     gBufferShader.uniform('u_texture_albedo', { type: 'texture', value: 16 });
     gBufferShader.unbind();
@@ -361,7 +362,7 @@ export class ModelViewerCore {
 
   public createMaterial(name: string): Material | null {
     if (!this.assetManager) return null;
-    const material = new LitMaterial(this.assetManager, 'lights', name);
+    const material = new LitMaterial(this.assetManager, 'g-buffer', name);
     this.assetManager.addMaterial(name, material);
     this.entityStore?.setMaterialList(this.assetManager.materialList);
     return material;

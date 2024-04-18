@@ -40,7 +40,7 @@ export function loadMtlFileMaterial(
   for (const mat of list) {
     mats[mat.name] = new LitMaterial(
       assetManager,
-      'lights',
+      'g-buffer',
       mat.name,
       mat.config,
     );

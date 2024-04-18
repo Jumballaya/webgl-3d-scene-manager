@@ -129,8 +129,8 @@ export class WebGL {
     this.context.readPixels(x, y, w, h, format, type, data);
   }
 
-  public clearColor(c: vec3) {
-    this.context.clearColor(c[0], c[1], c[2], 1);
+  public clearColor(c: vec3, a = 1) {
+    this.context.clearColor(c[0], c[1], c[2], a);
   }
 
   public viewport(x: number, y: number, size: vec2) {

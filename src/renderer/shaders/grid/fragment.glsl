@@ -8,6 +8,7 @@ layout(location=2) out vec4 out_normal;
 
 in vec2 v_uv;
 in vec4 v_position;
+in vec3 v_normal;
 
 uniform vec2 u_resolution;
 uniform bool u_dark_mode;
@@ -38,7 +39,10 @@ void main() {
   color = draw_grid(color, vec3(0.44, 0.44, 0.44), aspect, 0.025);
   color = draw_grid(color, vec3(0.22, 0.22, 0.22), aspect * 5.0, 0.05);
   float alpha = step(color.r, 0.88);
+  if (alpha < 0.0001) {
+    discard;
+  }
   out_color = vec4(float(u_dark_mode) - color, alpha);
-  out_position = v_position;
-  out_normal = vec4(0.0, 1.0, 0.0, 1.0);
+  out_position = vec4(v_position.xyz, 1.0);
+  out_normal = vec4(v_normal, 1.0);
 }

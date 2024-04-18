@@ -1,5 +1,5 @@
 import { Transform } from '../../math/Transform';
-import { Renderer } from '@/Renderer';
+import { Renderer } from '@/renderer/viewer/Renderer';
 import { Entity } from './Entity';
 import { Light } from '../light/Light';
 import { Mesh } from '../Mesh';
@@ -26,9 +26,9 @@ export class MeshRenderSystem implements System {
       const mesh = entity.getComponent<Mesh>('Mesh')?.data;
       const transfrom = entity.getComponent<Transform>('Transform')?.data;
       if (mesh && transfrom) {
-        const { geometry } = mesh;
-        if (geometry) {
-          this.renderer.add(geometry, transfrom);
+        const { geometry, material } = mesh;
+        if (geometry && material) {
+          this.renderer.add(geometry, transfrom, material);
         }
       }
     }

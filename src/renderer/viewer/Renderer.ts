@@ -13,10 +13,12 @@ import { LightManager } from './light/LightManager';
 import { LightTypes } from './light/types/light-types.type';
 import { Light } from './light/Light';
 import { Camera } from './Camera';
+import { Material } from './material/Material';
 
 type MeshRenderCall = {
   geometry: Geometry;
   transform: Transform;
+  material: Material;
 };
 
 const fragment = (id: number, frag: string) => `#version 300 es
@@ -67,6 +69,8 @@ export class Renderer {
 
   private postProccessStack: PostProccessStep[] = [];
   private stack: MeshRenderCall[] = [];
+
+  public showGrid = true;
 
   constructor(
     webgl: WebGL,
@@ -129,7 +133,7 @@ export class Renderer {
     this.gBufferShader = gBufferShader;
 
     this.backgroundColor = [0.92, 0.92, 0.92];
-    this.gridFloor = new GridMesh(webgl, assetManager, [30, 30]);
+    this.gridFloor = new GridMesh(webgl, assetManager, [1000, 1000]);
     this.lightManager = new LightManager(webgl);
   }
 
@@ -146,10 +150,7 @@ export class Renderer {
 
   public set darkMode(m: boolean) {
     this._darkMode = m;
-    this.gridFloor.uniform('u_dark_mode', {
-      type: 'boolean',
-      value: this._darkMode,
-    });
+    this.gridFloor.darkMode = m;
     if (this._darkMode) {
       this.backgroundColor = [0.05, 0.05, 0.05];
     } else {
@@ -195,6 +196,8 @@ export class Renderer {
       texValue++;
     }
 
+    this.webgl.clear('color', 'depth');
+
     this.quadGeometry.bind();
     this.screenShader.bind();
     this.screenShader.uniform('u_texture', {
@@ -206,10 +209,11 @@ export class Renderer {
     this.quadGeometry.unbind();
   }
 
-  public add(geometry: Geometry, transform: Transform) {
+  public add(geometry: Geometry, transform: Transform, material: Material) {
     this.stack.push({
       geometry,
       transform,
+      material,
     });
   }
 
@@ -226,7 +230,7 @@ export class Renderer {
 
   private renderMesh(mesh: MeshRenderCall) {
     mesh.geometry.bind();
-    this.gBufferShader.bind();
+    mesh.material.bind();
 
     this.modelUBO.bind();
     this.modelUBO.set('matrix', mesh.transform.matrix);
@@ -237,6 +241,12 @@ export class Renderer {
     this.materialUBO.set('textures', [0, 0, 0, 0]);
     this.materialUBO.unbind();
 
+    if (mesh.material.cullFace) {
+      this.webgl.enable('cull_face');
+    } else {
+      this.webgl.disable('cull_face');
+    }
+
     this.webgl.drawArrays(mesh.geometry.vertexCount, 'triangles');
     mesh.geometry.unbind();
     this.gBufferShader.unbind();
@@ -244,7 +254,8 @@ export class Renderer {
 
   private gBufferStage() {
     this.gBufferFBO.bind();
-    this.webgl.clearColor(this.backgroundColor);
+    this.webgl.clearColor(this.backgroundColor, 0);
+    this.webgl.enable('blend');
     this.webgl.viewport(0, 0, this.size);
     this.webgl.clear('color', 'depth');
 
@@ -255,19 +266,18 @@ export class Renderer {
       }
     }
 
-    // this.gridFloor.draw(
-    //   this.webgl,
-    //   this.modelUBO,
-    //   this.materialUBO,
-    //   this.gridFloor.transform,
-    // );
+    this.renderMesh({
+      transform: this.gridFloor.transform,
+      geometry: this.gridFloor.geometry!,
+      material: this.gridFloor.material!,
+    });
 
     this.gBufferFBO.unbind();
   }
 
   private lightsStage() {
     this.lightFBO.bind();
-    this.webgl.clearColor(this.backgroundColor);
+    this.webgl.clearColor(this.backgroundColor, 0);
     this.quadGeometry.bind();
     this.lightShader.bind();
     this.modelUBO.bind();
