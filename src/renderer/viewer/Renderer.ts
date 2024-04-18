@@ -266,11 +266,13 @@ export class Renderer {
       }
     }
 
-    this.renderMesh({
-      transform: this.gridFloor.transform,
-      geometry: this.gridFloor.geometry!,
-      material: this.gridFloor.material!,
-    });
+    if (this.showGrid) {
+      this.renderMesh({
+        transform: this.gridFloor.transform,
+        geometry: this.gridFloor.geometry!,
+        material: this.gridFloor.material!,
+      });
+    }
 
     this.gBufferFBO.unbind();
   }
