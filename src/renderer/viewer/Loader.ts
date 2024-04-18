@@ -1,6 +1,7 @@
 import { AssetManager } from '../assets/AssetManager';
 import {
   loadObj,
+  loadGeometry,
   loadObjFileGeometries,
   loadMtlFileMaterial,
 } from '../assets/obj-loader';
@@ -17,7 +18,8 @@ export type LoaderEntry =
   | ObjNetworkEntry
   | TextureSrcEntry
   | MaterialSrcEntry
-  | GeometrySrcEntry;
+  | GeometrySrcEntry
+  | GeometryNetworkEntry;
 
 type TextureNetworkEntry = {
   type: 'texture:network';
@@ -36,6 +38,13 @@ type GeometrySrcEntry = {
   fileType: 'obj';
   name: string;
   file: File;
+};
+
+type GeometryNetworkEntry = {
+  name: string;
+  type: 'geometry:network';
+  dir: string;
+  file: string;
 };
 
 type MaterialSrcEntry = {
@@ -162,6 +171,18 @@ export class Loader {
           }
           break;
         }
+        case 'geometry:network': {
+          if (!item.dir.endsWith('/')) item.dir = item.dir + '/';
+          const geometries = await this.loadGeometryNetwork(
+            item.dir,
+            item.file,
+            item.name,
+          );
+          for (const geo of geometries) {
+            out.geometries[geo.name] = geo;
+          }
+          break;
+        }
         case 'material:src': {
           const contents = await readTextFile(item.file);
           const materials = loadMtlFileMaterial(
@@ -203,5 +224,10 @@ export class Loader {
       assetManager,
     );
     return meshes;
+  }
+
+  private async loadGeometryNetwork(dir: string, file: string, name: string) {
+    const geometries = await loadGeometry(dir, file, this.webgl, name);
+    return geometries;
   }
 }

@@ -58,7 +58,6 @@ export class LitMaterial extends Material {
 
   public bindUbo(ubo: UBO) {
     ubo.bind();
-    this.assetManager.getShader(this.shader)?.bind();
     const albedoTexId = this.assetManager.getTexture(this.albedo)?.id ?? 16;
     // const normalTexId = this.webgl.textures[this.normal_map]?.id ?? 16;
     // const specularTexId = this.webgl.textures[this.specular_map]?.id ?? 16;
@@ -79,7 +78,6 @@ export class LitMaterial extends Material {
     });
     //this.webgl.shaders[this.shader]?.uniform('u_texture_normal', { type: 'texture', value: normalTexId });
     //this.webgl.shaders[this.shader]?.uniform('u_texture_specular', { type: 'texture', value: specularTexId });
-    this.assetManager.getShader(this.shader)?.unbind();
     ubo.unbind();
   }
 

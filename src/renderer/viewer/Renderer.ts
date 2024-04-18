@@ -14,6 +14,7 @@ import { LightTypes } from './light/types/light-types.type';
 import { Light } from './light/Light';
 import { Camera } from './Camera';
 import { Material } from './material/Material';
+import { LitMaterial } from './material/LitMaterial';
 
 type MeshRenderCall = {
   geometry: Geometry;
@@ -237,9 +238,7 @@ export class Renderer {
     this.modelUBO.set('inv_trans_matrix', mesh.transform.invTrans);
     this.modelUBO.unbind();
 
-    this.materialUBO.bind();
-    this.materialUBO.set('textures', [0, 0, 0, 0]);
-    this.materialUBO.unbind();
+    mesh.material.bindUbo(this.materialUBO);
 
     if (mesh.material.cullFace) {
       this.webgl.enable('cull_face');

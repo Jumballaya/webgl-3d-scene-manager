@@ -101,3 +101,24 @@ export async function loadObj(
 
   return meshes;
 }
+
+export async function loadGeometry(
+  base: string,
+  file: string,
+  webgl: WebGL,
+  name: string,
+): Promise<Geometry[]> {
+  const objFile = await ObjFile.FromFile(file, base);
+  const contents = objFile.parse();
+
+  const geometries: Geometry[] = [];
+  for (const obj of contents.meshes) {
+    const vertexArray = webgl.createVertexArray({
+      drawType: WebGL2RenderingContext.STATIC_DRAW,
+      buffers: obj.buffers,
+    });
+    geometries.push(new Geometry(vertexArray, name));
+  }
+
+  return geometries;
+}

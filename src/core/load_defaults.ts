@@ -46,11 +46,10 @@ export async function load_defaults(assetManager: AssetManager) {
       fragment: screenFrag,
     },
     {
-      type: 'obj:network',
+      type: 'geometry:network',
       name: 'suzanne',
       dir: 'models/suzanne/',
       file: 'suzanne.obj',
-      shader: 'g-buffer',
     },
     { type: 'shader:src', name: 'grid', vertex: gridVert, fragment: gridFrag },
     { type: 'shader:src', name: 'id', vertex: idVert, fragment: idFrag },
