@@ -12,7 +12,7 @@ import {
 } from './types/configs';
 import { Controller } from '@/engine/controls/Controller';
 import { UBO } from './UBO';
-import { loadImage } from '@/engine/assets/image-loader';
+import { loadImage } from '@/engine/assets/loaders';
 import { Surface } from './Surface';
 import { FrameBuffer } from './FrameBuffer';
 

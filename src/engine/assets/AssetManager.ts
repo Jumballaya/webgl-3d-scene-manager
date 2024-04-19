@@ -1,21 +1,13 @@
-/**
- *      Assets:
- *
- *        - Textures
- *        - Geometries
- *        - Materials
- *        - Shaders
- *
- */
-
 import { Shader } from '../render/gl/Shader';
 import { Texture } from '../render/gl/Texture';
 import { WebGL } from '../render/gl/WebGL';
-import { Loader, LoaderEntry } from './Loader';
+import { Loader } from './Loader';
 import { Mesh } from '../render/mesh/Mesh';
 import { Geometry } from '../render/geometry/Geometry';
 import { QuadGeometry } from '../render/geometry/QuadGeometry';
 import { Material } from '../render/material/Material';
+import { ScriptManager } from '../scripting/ScriptManager';
+import type { LoaderEntry } from './assets.types';
 
 export class AssetManager {
   private textures: Map<string, Texture> = new Map();
@@ -24,10 +16,12 @@ export class AssetManager {
   private shaders: Map<string, Shader> = new Map();
   private meshes: Map<string, Mesh> = new Map();
   private loader: Loader;
+  private scriptManager: ScriptManager;
 
-  constructor(webgl: WebGL) {
+  constructor(webgl: WebGL, scriptManager: ScriptManager) {
     this.loader = new Loader(webgl);
     this.geometries.set('quad', new QuadGeometry(webgl, 'quad'));
+    this.scriptManager = scriptManager;
   }
 
   public get meshList(): string[] {
@@ -48,6 +42,10 @@ export class AssetManager {
 
   public get materialList(): string[] {
     return Array.from(this.materials.keys());
+  }
+
+  public get scriptList(): string[] {
+    return this.scriptManager.scriptList();
   }
 
   public async load(items: LoaderEntry[]) {
@@ -72,6 +70,9 @@ export class AssetManager {
     }
     for (const [name, shader] of Object.entries(out.shaders)) {
       this.shaders.set(name, shader);
+    }
+    for (const [name, text] of Object.entries(out.scripts)) {
+      this.scriptManager.addScript(name, text);
     }
   }
 
@@ -113,5 +114,13 @@ export class AssetManager {
 
   public getShader(name: string): Shader | null {
     return this.shaders.get(name) ?? null;
+  }
+
+  public addScript(name: string, content: string) {
+    this.scriptManager.addScript(name, content);
+  }
+
+  public getScript<T extends Array<unknown>>(name: string) {
+    return this.scriptManager.getScript<T>(name);
   }
 }

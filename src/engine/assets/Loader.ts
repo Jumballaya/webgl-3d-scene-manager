@@ -1,112 +1,14 @@
 import { AssetManager } from './AssetManager';
 import {
+  loadText,
   loadObj,
   loadGeometry,
   loadObjFileGeometries,
   loadMtlFileMaterial,
-} from './obj-loader';
-import { Shader } from '../render/gl/Shader';
-import { Texture } from '../render/gl/Texture';
+} from './loaders';
 import { WebGL } from '../render/gl/WebGL';
-import { Mesh } from '../render/mesh/Mesh';
-import { Geometry } from '../render/geometry/Geometry';
-import { Material } from '../render/material/Material';
-
-export type LoaderEntry =
-  | TextureNetworkEntry
-  | ShaderSrcEntry
-  | ObjNetworkEntry
-  | TextureSrcEntry
-  | MaterialSrcEntry
-  | GeometrySrcEntry
-  | GeometryNetworkEntry;
-
-type TextureNetworkEntry = {
-  type: 'texture:network';
-  name: string;
-  path: string;
-};
-
-type TextureSrcEntry = {
-  type: 'texture:src';
-  name: string;
-  file: File;
-};
-
-type GeometrySrcEntry = {
-  type: 'geometry:src';
-  fileType: 'obj';
-  name: string;
-  file: File;
-};
-
-type GeometryNetworkEntry = {
-  name: string;
-  type: 'geometry:network';
-  dir: string;
-  file: string;
-};
-
-type MaterialSrcEntry = {
-  type: 'material:src';
-  fileType: 'mtl';
-  name: string;
-  file: File;
-};
-
-type ShaderSrcEntry = {
-  type: 'shader:src';
-  name: string;
-  vertex: string;
-  fragment: string;
-};
-
-type ObjNetworkEntry = {
-  name: string;
-  type: 'obj:network';
-  dir: string;
-  file: string;
-  shader: string;
-};
-
-type LoaderOutput = {
-  meshes: Record<string, Mesh>;
-  textures: Record<string, Texture>;
-  geometries: Record<string, Geometry>;
-  materials: Record<string, Material>;
-  shaders: Record<string, Shader>;
-};
-
-async function readImageFile(file: File): Promise<HTMLImageElement> {
-  const fileReader = new FileReader();
-  return new Promise((res, rej) => {
-    fileReader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        res(img);
-      };
-      img.title = file.name;
-      img.src = fileReader.result as string;
-    };
-    fileReader.onerror = (e) => {
-      rej(e);
-    };
-    fileReader.readAsDataURL(file);
-  });
-}
-
-async function readTextFile(file: File): Promise<string> {
-  const fileReader = new FileReader();
-  return new Promise((res, rej) => {
-    fileReader.onload = () => {
-      res(fileReader.result as string);
-    };
-    fileReader.onerror = (e) => {
-      rej(e);
-    };
-    fileReader.readAsText(file);
-  });
-}
+import { readImageFile, readTextFile } from './file-reader';
+import { LoaderEntry, LoaderOutput } from './assets.types';
 
 export class Loader {
   private webgl: WebGL;
@@ -122,6 +24,7 @@ export class Loader {
       geometries: {},
       materials: {},
       shaders: {},
+      scripts: {},
     };
     for (const item of items) {
       switch (item.type) {
@@ -191,6 +94,12 @@ export class Loader {
             contents,
           );
           out.materials = { ...out.materials, ...materials };
+          break;
+        }
+        case 'script:network': {
+          if (!item.dir.endsWith('/')) item.dir = item.dir + '/';
+          const script = await loadText(`${item.dir}${item.file}`);
+          out.scripts[item.name] = script;
           break;
         }
       }

@@ -122,3 +122,20 @@ export async function loadGeometry(
 
   return geometries;
 }
+
+export function loadImage(path: string): Promise<HTMLImageElement> {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.addEventListener('load', () => res(img));
+    img.addEventListener('error', (e) => rej(e));
+    let fullpath = path;
+    if (fullpath[0] === '/' && fullpath[1] === '/')
+      fullpath = fullpath.slice(1);
+    img.src = fullpath;
+  });
+}
+
+export async function loadText(path: string): Promise<string> {
+  const response = await fetch(path);
+  return response.text();
+}

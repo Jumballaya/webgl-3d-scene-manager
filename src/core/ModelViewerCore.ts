@@ -10,27 +10,24 @@ import { Transform } from '@/engine/math/Transform';
 import { AssetManager } from '@/engine/assets/AssetManager';
 import { Mesh } from '@/engine/render/mesh/Mesh';
 import { LightTypes } from '@/engine/render/light/types/light-types.type';
-import { LoaderEntry } from '@/engine/assets/Loader';
+import type { LoaderEntry } from '@/engine/assets/assets.types';
 import { LitMaterial } from '@/engine/render/material/LitMaterial';
 import { Material } from '@/engine/render/material/Material';
 import { Light } from '@/engine/render/light/Light';
 import { LightSystem, MeshRenderSystem } from '@/engine/ecs/System';
 import { Renderer } from '@/engine/render/Renderer';
 import { apply_sobel } from './sobel_effect';
+import { ScriptManager } from '@/engine/scripting/ScriptManager';
+import { LuaFactory } from 'wasmoon';
 
 ///////
 //
 //
-//   Rework the Entity from the renderer (scene) up:
+//    This is the Editor Application
 //
-//      3. Entity Components:
-//          a. Universal Components
-//             i.  Name, Transform
-//             ii. Name is added by default
-//          b. Render Components
-//             i. Mesh (Geometry and Material), Light (type and props)
-//          c. Can add Components and children in the details sidebar
-//          d. Can only have 1 kind of render component
+//
+//
+//    The Game application will be elsewhere and will run the actual game, this runs the whole editor
 //
 //
 ////////
@@ -42,6 +39,7 @@ export class ModelViewerCore {
   public renderer?: Renderer;
   public controller: Controller;
   public input: ArcballCamera;
+  public scriptManager?: ScriptManager;
 
   public ecs: ECS;
   private currentlySelected: Entity | null = null;
@@ -105,13 +103,15 @@ export class ModelViewerCore {
     const camera = new Camera(
       webgl,
       (Math.PI / 180) * 65,
-      1024,
-      768,
+      800,
+      600,
       0.001,
       1000,
       this.input,
     );
-    const assetManager = new AssetManager(webgl);
+    const lua = await new LuaFactory().createEngine();
+    this.scriptManager = new ScriptManager(this.ecs, lua);
+    const assetManager = new AssetManager(webgl, this.scriptManager);
     this.assetManager = assetManager;
     await load_defaults(assetManager); // Must be loaded before scene is created @TODO: Must fix
 
@@ -126,7 +126,7 @@ export class ModelViewerCore {
 
     const renderer = new Renderer(
       webgl,
-      [1024, 768],
+      [800, 600],
       lightShader,
       screenShader,
       gBufferShader,
@@ -156,6 +156,9 @@ export class ModelViewerCore {
     this.ecs.registerSystem('Lights', lightSystem);
 
     this.initialized = true;
+
+    console.log(this.assetManager);
+
     return this;
   }
 

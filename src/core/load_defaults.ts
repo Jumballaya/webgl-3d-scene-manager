@@ -53,5 +53,11 @@ export async function load_defaults(assetManager: AssetManager) {
     },
     { type: 'shader:src', name: 'grid', vertex: gridVert, fragment: gridFrag },
     { type: 'shader:src', name: 'id', vertex: idVert, fragment: idFrag },
+    {
+      type: 'script:network',
+      name: 'player_update',
+      dir: 'scripts/player/',
+      file: 'player_update.lua',
+    },
   ]);
 }
