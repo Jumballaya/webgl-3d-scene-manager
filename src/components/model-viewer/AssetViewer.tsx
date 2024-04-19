@@ -6,7 +6,14 @@ import { AssetTypeSelector } from './asset-viewer/AssetTypeSelector';
 import { FileUploader } from './asset-viewer/FileUploader';
 import { AssetDetails } from './asset-viewer/AssetDetails';
 
-const types = ['none', 'meshes', 'geometries', 'materials', 'textures'];
+const types = [
+  'none',
+  'meshes',
+  'geometries',
+  'materials',
+  'textures',
+  'scripts',
+];
 
 export function AssetViewer() {
   const mvc = useModelViewerCore();

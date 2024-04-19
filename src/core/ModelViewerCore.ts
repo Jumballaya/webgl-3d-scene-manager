@@ -90,6 +90,7 @@ export class ModelViewerCore {
   }
 
   public setEntityStore(es: EntityStoreState) {
+    if (this.entityStore) return;
     this.entityStore = es;
   }
 
@@ -156,8 +157,6 @@ export class ModelViewerCore {
     this.ecs.registerSystem('Lights', lightSystem);
 
     this.initialized = true;
-
-    console.log(this.assetManager);
 
     return this;
   }

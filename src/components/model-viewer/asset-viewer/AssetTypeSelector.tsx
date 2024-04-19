@@ -54,6 +54,10 @@ export function AssetTypeSelector(props: {
                 setAssetList(assetManager.textureList);
                 break;
               }
+              case 'scripts': {
+                setAssetList(assetManager.scriptList);
+                break;
+              }
               default: {
                 setAssetList([]);
                 break;
