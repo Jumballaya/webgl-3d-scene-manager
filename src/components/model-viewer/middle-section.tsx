@@ -7,8 +7,10 @@ import { Separator } from '@/shadcn/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/ui/tabs';
 import CanvasViewer from '../CanvasViewer';
 import { TextEditor } from './TextEditor';
+import { useEditorStore } from '@/store/editorStore';
 
 export default function MiddleSection() {
+  const { setCurrentTab, currentTab } = useEditorStore();
   return (
     <ResizablePanel minSize={30}>
       <Tabs defaultValue="viewer" style={{ height: '100%' }}>
@@ -17,12 +19,18 @@ export default function MiddleSection() {
             <TabsTrigger
               value="viewer"
               className="text-zinc-600 dark:text-zinc-200"
+              onClick={() => {
+                if (currentTab !== '3d-viewer') setCurrentTab('3d-viewer');
+              }}
             >
               3D Viewer
             </TabsTrigger>
             <TabsTrigger
               value="editor"
               className="text-zinc-600 dark:text-zinc-200"
+              onClick={() => {
+                if (currentTab !== 'text-editor') setCurrentTab('text-editor');
+              }}
             >
               Script Editor
             </TabsTrigger>
@@ -50,7 +58,7 @@ export default function MiddleSection() {
           >
             <ResizablePanel>
               <div className="flex items-center justify-center h-full">
-                <TextEditor code="" />
+                <TextEditor />
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle />

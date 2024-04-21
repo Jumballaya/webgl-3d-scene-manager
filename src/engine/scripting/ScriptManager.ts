@@ -1,37 +1,7 @@
 import { ECS } from '../ecs/ECS';
 import { LuaEngine } from 'wasmoon';
-import { Entity } from '../ecs/Entity';
 import { setup_lua_util } from './globals';
-
-class Script<P extends Array<unknown>> {
-  private manager: ScriptManager;
-  private text: string;
-  private fn: (entity: Entity, ...params: P) => void;
-
-  constructor(manager: ScriptManager, text: string) {
-    this.text = text;
-    this.manager = manager;
-    this.fn = manager.generateFunction(text);
-  }
-
-  public runScript(entity: Entity, ...params: P) {
-    this.fn(entity, ...params);
-  }
-
-  public updateText(text: string) {
-    this.text = text;
-  }
-
-  public compile() {
-    this.fn = this.manager.generateFunction(this.text);
-  }
-}
-
-// type ScriptData = {
-//   update?: Script<[number]>; // entity, deltaTime
-//   onClick?: Script<[number, vec2]>; // entity, mouse position
-//   //onCollision?: Script<[Collision]> // entity, collision
-// };
+import { Script } from './Script';
 
 export class ScriptManager {
   private ecs: ECS;

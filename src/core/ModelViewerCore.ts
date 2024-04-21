@@ -156,8 +156,15 @@ export class ModelViewerCore {
     const lightSystem = new LightSystem();
     this.ecs.registerSystem('Lights', lightSystem);
 
-    this.initialized = true;
+    if (this.assetManager && this.entityStore) {
+      this.entityStore.setGeometryList(this.assetManager.geometryList);
+      this.entityStore.setMaterialList(this.assetManager.materialList);
+      this.entityStore.setMeshList(this.assetManager.meshList);
+      this.entityStore.setScriptList(this.assetManager.scriptList);
+      this.entityStore.setTextureList(this.assetManager.textureList);
+    }
 
+    this.initialized = true;
     return this;
   }
 
@@ -379,5 +386,9 @@ export class ModelViewerCore {
     this.assetManager.addMaterial(name, material);
     this.entityStore?.setMaterialList(this.assetManager.materialList);
     return material;
+  }
+
+  public getScript(name: string) {
+    return this.scriptManager?.getScript(name) ?? null;
   }
 }

@@ -1,6 +1,7 @@
 import { Transform } from '@/engine/math/Transform';
 import { Mesh } from '@/engine/render/mesh/Mesh';
 import { Light } from '@/engine/render/light/Light';
+import { ScriptData } from '../scripting/scripts.types';
 
 export class Component<T> {
   public static name = 'Component';
@@ -28,4 +29,8 @@ export class MeshComponent extends Component<Mesh> {
 
 export class LightComponent extends Component<Light> {
   public static name = 'Light';
+}
+
+export class ScriptComponent extends Component<ScriptData> {
+  public static name = 'Script';
 }

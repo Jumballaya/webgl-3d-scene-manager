@@ -6,14 +6,7 @@ import { AssetTypeSelector } from './asset-viewer/AssetTypeSelector';
 import { FileUploader } from './asset-viewer/FileUploader';
 import { AssetDetails } from './asset-viewer/AssetDetails';
 
-const types = [
-  'none',
-  'meshes',
-  'geometries',
-  'materials',
-  'textures',
-  'scripts',
-];
+const types = ['none', 'geometries', 'materials', 'textures', 'scripts'];
 
 export function AssetViewer() {
   const mvc = useModelViewerCore();
@@ -44,10 +37,6 @@ export function AssetViewer() {
           onUpload={() => {
             if (mvc.assetManager) {
               switch (currentType) {
-                case 'meshes': {
-                  setAssetList(mvc.assetManager.meshList);
-                  break;
-                }
                 case 'geometries': {
                   setAssetList(mvc.assetManager.geometryList);
                   break;
@@ -58,6 +47,10 @@ export function AssetViewer() {
                 }
                 case 'textures': {
                   setAssetList(mvc.assetManager.textureList);
+                  break;
+                }
+                case 'scripts': {
+                  setAssetList(mvc.assetManager.scriptList);
                   break;
                 }
                 default: {

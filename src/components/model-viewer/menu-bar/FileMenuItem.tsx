@@ -4,9 +4,6 @@ import {
   MenubarMenu,
   MenubarSeparator,
   MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
   MenubarTrigger,
 } from '@/shadcn/ui/menubar';
 
@@ -16,25 +13,17 @@ export function FileMenuItem() {
       <MenubarTrigger>File</MenubarTrigger>
       <MenubarContent>
         <MenubarItem>
-          New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+          New Project <MenubarShortcut>Ctrl+N</MenubarShortcut>
         </MenubarItem>
         <MenubarItem>
-          New Window <MenubarShortcut>⌘N</MenubarShortcut>
+          New Scene <MenubarShortcut>Ctrl+Shift+N</MenubarShortcut>
         </MenubarItem>
-        <MenubarItem disabled>New Incognito Window</MenubarItem>
-        <MenubarSeparator />
-        <MenubarSub>
-          <MenubarSubTrigger>Share</MenubarSubTrigger>
-          <MenubarSubContent>
-            <MenubarItem>Email link</MenubarItem>
-            <MenubarItem>Messages</MenubarItem>
-            <MenubarItem>Notes</MenubarItem>
-          </MenubarSubContent>
-        </MenubarSub>
         <MenubarSeparator />
         <MenubarItem>
-          Print... <MenubarShortcut>⌘P</MenubarShortcut>
+          Save Project <MenubarShortcut>Ctrl+S</MenubarShortcut>
         </MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Properties</MenubarItem>
       </MenubarContent>
     </MenubarMenu>
   );

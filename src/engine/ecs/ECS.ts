@@ -4,6 +4,7 @@ import {
   LightComponent,
   MeshComponent,
   NameComponent,
+  ScriptComponent,
   TransformComponent,
 } from './Component';
 import { System } from './System';
@@ -15,6 +16,7 @@ const _components = {
   Transform: TransformComponent,
   Mesh: MeshComponent,
   Light: LightComponent,
+  Script: ScriptComponent,
 };
 
 export class ECS {

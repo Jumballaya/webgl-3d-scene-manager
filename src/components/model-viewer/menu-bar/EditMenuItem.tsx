@@ -16,26 +16,22 @@ export function EditMenuItem() {
       <MenubarTrigger>Edit</MenubarTrigger>
       <MenubarContent>
         <MenubarItem>
-          Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+          Undo <MenubarShortcut>Ctrl+Z</MenubarShortcut>
         </MenubarItem>
         <MenubarItem>
-          Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+          Redo <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut>
         </MenubarItem>
         <MenubarSeparator />
         <MenubarSub>
-          <MenubarSubTrigger>Find</MenubarSubTrigger>
+          <MenubarSubTrigger>Create New</MenubarSubTrigger>
           <MenubarSubContent>
-            <MenubarItem>Search the web</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Find...</MenubarItem>
-            <MenubarItem>Find Next</MenubarItem>
-            <MenubarItem>Find Previous</MenubarItem>
+            <MenubarItem>Blank Entity</MenubarItem>
+            <MenubarItem>Mesh Entity</MenubarItem>
+            <MenubarItem>Light Entity</MenubarItem>
+            <MenubarItem>Lua Script</MenubarItem>
+            <MenubarItem>Post Effect</MenubarItem>
           </MenubarSubContent>
         </MenubarSub>
-        <MenubarSeparator />
-        <MenubarItem>Cut</MenubarItem>
-        <MenubarItem>Copy</MenubarItem>
-        <MenubarItem>Paste</MenubarItem>
       </MenubarContent>
     </MenubarMenu>
   );

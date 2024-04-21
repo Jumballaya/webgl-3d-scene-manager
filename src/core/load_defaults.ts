@@ -55,9 +55,27 @@ export async function load_defaults(assetManager: AssetManager) {
     { type: 'shader:src', name: 'id', vertex: idVert, fragment: idFrag },
     {
       type: 'script:network',
-      name: 'player_update',
+      name: 'player_update.lua',
       dir: 'scripts/player/',
       file: 'player_update.lua',
+    },
+    {
+      type: 'script:network',
+      name: 'player_collision.lua',
+      dir: 'scripts/player/',
+      file: 'player_collision.lua',
+    },
+    {
+      type: 'script:network',
+      name: 'enemy_update.lua',
+      dir: 'scripts/enemies/',
+      file: 'enemy_update.lua',
+    },
+    {
+      type: 'script:network',
+      name: 'enemy_spawner_update.lua',
+      dir: 'scripts/enemies/',
+      file: 'enemy_spawner_update.lua',
     },
   ]);
 }
