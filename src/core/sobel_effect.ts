@@ -1,8 +1,8 @@
-import { Renderer } from '@/renderer/viewer/Renderer';
+import { Renderer } from '@/engine/render/Renderer';
 
 export function apply_sobel(renderer: Renderer) {
   renderer.createPostProcessStep(
-    'sobel outline',
+    'Sobel Outline',
     `
     void make_kernel(inout vec4 n[9], sampler2D tex, vec2 coord)
     {
@@ -34,5 +34,6 @@ export function apply_sobel(renderer: Renderer) {
       outColor = vec4(color, base.a);
     }
   `,
+    'Creates outlines where 2 drastically different colors meet',
   );
 }

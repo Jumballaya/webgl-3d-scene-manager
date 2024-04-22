@@ -192,6 +192,7 @@ export class Renderer {
 
     let texValue = 3;
     for (const postProcess of this.postProccessStack) {
+      if (!postProcess.enabled) continue;
       postProcess.draw(texValue);
       texValue++;
     }
@@ -217,15 +218,25 @@ export class Renderer {
     });
   }
 
-  public createPostProcessStep(name: string, code: string) {
+  public createPostProcessStep(
+    name: string,
+    code: string,
+    description?: string,
+  ) {
     const texId = 4 + this.postProccessStack.length;
     const step = new PostProccessStep(
       this.webgl,
       this.webgl.createShader(name, vertex(), fragment(texId, code)),
+      name,
       this.size,
       texId,
+      description,
     );
     this.postProccessStack.push(step);
+  }
+
+  public getPostEffects() {
+    return this.postProccessStack;
   }
 
   private renderMesh(mesh: MeshRenderCall) {

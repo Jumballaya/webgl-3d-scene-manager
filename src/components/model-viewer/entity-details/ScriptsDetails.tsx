@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shadcn/ui/select';
+import { useEditorStore } from '@/store/editorStore';
 import { useEntityStore } from '@/store/entityStore';
 import { useEffect, useState } from 'react';
 
@@ -33,17 +34,19 @@ function AddScript() {
   );
 }
 
+const defaultScript: ScriptData = {
+  update: 'none',
+};
+
 export function ScriptsDetails() {
   const { currentlySelected, scriptList } = useEntityStore();
+  const editorStore = useEditorStore();
   const mvc = useModelViewerCore();
   const scriptsComp = currentlySelected?.components.filter(
     (c) => c[0] === 'Script',
   )[0] as [string, ScriptData] | undefined;
   const scriptData = scriptsComp?.[1];
-  const [scripts, setScripts] = useState<ScriptData | null>(scriptData ?? null);
-  const [scriptUI, setScriptUI] = useState<{ update: string }>({
-    update: 'none',
-  });
+  const [scripts, setScripts] = useState<ScriptData>(defaultScript);
 
   // runs when currentlySelected changes
   useEffect(() => {
@@ -52,7 +55,7 @@ export function ScriptsDetails() {
         (c) => c[0] === 'Script',
       )[0] as [string, ScriptData] | undefined;
       const script = scriptsComp?.[1];
-      setScripts(script ?? null);
+      setScripts(script ?? defaultScript);
     }
   }, [currentlySelected]);
 
@@ -77,10 +80,10 @@ export function ScriptsDetails() {
               <Select
                 onValueChange={(update) => {
                   // update which script is used
-                  setScriptUI({ ...scriptUI, update });
+                  setScripts({ ...scripts, update });
                   mvc.setScriptOnCurrentlySelected('update', update);
                 }}
-                value={scriptUI.update}
+                value={scripts.update}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a script" />
@@ -96,6 +99,18 @@ export function ScriptsDetails() {
                 </SelectContent>
               </Select>
             </section>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                if (scripts.update) {
+                  editorStore.setCurrentTab('text-editor');
+                  editorStore.openFileTab(scripts.update);
+                  editorStore.setCurrentTextFile(scripts.update);
+                }
+              }}
+            >
+              Edit Script
+            </Button>
           </CardContent>
         </Card>
       </CardContent>

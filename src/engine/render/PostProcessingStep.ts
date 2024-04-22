@@ -12,7 +12,18 @@ export class PostProccessStep {
   private shader: Shader;
   private size: vec2;
 
-  constructor(webgl: WebGL, shader: Shader, screenSize: vec2, offset: number) {
+  public name: string;
+  public description: string = '';
+  public enabled = true;
+
+  constructor(
+    webgl: WebGL,
+    shader: Shader,
+    name: string,
+    screenSize: vec2,
+    offset: number,
+    description?: string,
+  ) {
     this.shader = shader;
     this.quad = new QuadGeometry(webgl, 'quad');
     this.webgl = webgl;
@@ -28,6 +39,8 @@ export class PostProccessStep {
     webgl.drawBuffers(this.fbo.getDrawBuffers());
     this.fbo.unbind();
     this.size = screenSize;
+    this.name = name;
+    this.description = description ?? '';
   }
 
   public draw(textureToProcess: number) {

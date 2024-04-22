@@ -25,31 +25,33 @@ export function TextEditor() {
   return (
     <div className="h-full w-full">
       <FileTabs />
-      <Editor
-        language="lua"
-        theme={theme === 'dark' ? 'vs-dark' : 'light'}
-        value={code}
-        path={currentTextFile ?? undefined}
-        onChange={(text) => {
-          if (text && currentTextFile) {
-            const script = mvc.getScript(currentTextFile);
-            if (script) {
-              const original = script.text;
-              try {
-                script.updateText(text);
-                script.compile();
-              } catch (e) {
-                script.updateText(original);
-                script.compile();
-                // @TODO: Route this error to the console logger component
+      {currentTextFile ? (
+        <Editor
+          language="lua"
+          theme={theme === 'dark' ? 'vs-dark' : 'light'}
+          value={code}
+          path={currentTextFile ?? undefined}
+          onChange={(text) => {
+            if (text && currentTextFile) {
+              const script = mvc.getScript(currentTextFile);
+              if (script) {
+                const original = script.text;
+                try {
+                  script.updateText(text);
+                  script.compile();
+                } catch (e) {
+                  script.updateText(original);
+                  script.compile();
+                  // @TODO: Route this error to the console logger component
+                }
               }
             }
-          }
-        }}
-        onValidate={(...p) => {
-          console.log(p);
-        }}
-      />
+          }}
+          onValidate={(...p) => {
+            console.log(p);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

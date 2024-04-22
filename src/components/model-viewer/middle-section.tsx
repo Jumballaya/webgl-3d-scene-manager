@@ -13,11 +13,11 @@ export default function MiddleSection() {
   const { setCurrentTab, currentTab } = useEditorStore();
   return (
     <ResizablePanel minSize={30}>
-      <Tabs defaultValue="viewer" style={{ height: '100%' }}>
+      <Tabs value={currentTab} style={{ height: '100%' }}>
         <div className="flex items-center px-4 py-2">
           <TabsList className="ml-auto">
             <TabsTrigger
-              value="viewer"
+              value="3d-viewer"
               className="text-zinc-600 dark:text-zinc-200"
               onClick={() => {
                 if (currentTab !== '3d-viewer') setCurrentTab('3d-viewer');
@@ -26,7 +26,7 @@ export default function MiddleSection() {
               3D Viewer
             </TabsTrigger>
             <TabsTrigger
-              value="editor"
+              value="text-editor"
               className="text-zinc-600 dark:text-zinc-200"
               onClick={() => {
                 if (currentTab !== 'text-editor') setCurrentTab('text-editor');
@@ -40,7 +40,7 @@ export default function MiddleSection() {
         {
           // #TODO: Move the console footer abd resizable panel group outside of the tabs content
         }
-        <TabsContent value="viewer" className="m-0 h-full">
+        <TabsContent value="3d-viewer" className="m-0 h-full">
           <ResizablePanelGroup
             direction="vertical"
             className="items-stretch h-full"
@@ -54,7 +54,7 @@ export default function MiddleSection() {
             <ResizablePanel maxSize={28} minSize={20}></ResizablePanel>
           </ResizablePanelGroup>
         </TabsContent>
-        <TabsContent value="editor" className="m-0 h-full">
+        <TabsContent value="text-editor" className="m-0 h-full">
           <ResizablePanelGroup
             direction="vertical"
             className="items-stretch h-full"

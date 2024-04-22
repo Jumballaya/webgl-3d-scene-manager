@@ -24,6 +24,7 @@ import { apply_sobel } from './sobel_effect';
 import { ScriptManager } from '@/engine/scripting/ScriptManager';
 import { LuaFactory } from 'wasmoon';
 import { ScriptData } from '@/engine/scripting/scripts.types';
+import { PostProccessStep } from '@/engine/render/PostProcessingStep';
 
 ///////
 //
@@ -412,5 +413,9 @@ export class ModelViewerCore {
 
   public getScript(name: string) {
     return this.scriptManager?.getScript(name) ?? null;
+  }
+
+  public getPostEffects(): PostProccessStep[] {
+    return this.renderer?.getPostEffects() ?? [];
   }
 }

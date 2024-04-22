@@ -7,8 +7,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <main className="h-screen border rounded">
         <MenuBar />
-        <div className="md:hidden"></div>
-        <div className="hidden flex-col md:flex h-95">
+        <div className="flex-col md:flex h-full">
           <ModelViewer />
         </div>
       </main>
