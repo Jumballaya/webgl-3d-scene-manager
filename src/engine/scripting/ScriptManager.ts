@@ -1,6 +1,6 @@
 import { ECS } from '../ecs/ECS';
 import { LuaEngine } from 'wasmoon';
-import { setup_lua_util } from './globals';
+import { setup_lua_entity_components, setup_lua_util } from './globals';
 import { Script } from './Script';
 
 export class ScriptManager {
@@ -13,6 +13,7 @@ export class ScriptManager {
     this.ecs = ecs;
     this.lua = lua;
     setup_lua_util(this.lua);
+    setup_lua_entity_components(this.lua, this.ecs);
   }
 
   public generateFunction(fn: string) {

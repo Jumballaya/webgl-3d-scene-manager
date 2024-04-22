@@ -26,11 +26,11 @@ export class MeshRenderSystem implements System {
   public run(entities: Entity[]) {
     for (const entity of entities) {
       const mesh = entity.getComponent<Mesh>('Mesh')?.data;
-      const transfrom = entity.getComponent<Transform>('Transform')?.data;
-      if (mesh && transfrom) {
+      const transform = entity.getComponent<Transform>('Transform')?.data;
+      if (mesh && transform) {
         const { geometry, material } = mesh;
         if (geometry && material) {
-          this.renderer.add(geometry, transfrom, material);
+          this.renderer.add(geometry, transform, material);
         }
       }
     }
