@@ -1,30 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shadcn/ui/card';
 import { useEntityStore } from '@/store/entityStore';
 import { useEffect, useState } from 'react';
 import { Button } from '@/shadcn/ui/button';
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { Transform } from '@/engine/math/Transform';
 import { EntityComponentVec3Field } from './component-details/EntityComponentVec3Field';
-
-function AddTransform() {
-  const mvc = useModelViewerCore();
-  return (
-    <Card className="p-1 my-4">
-      <CardHeader className="p-3 pb-0"></CardHeader>
-      <CardContent className="p-3">
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            mvc.addComponentToCurrentlySelected('Transform', new Transform());
-          }}
-          id="create-child"
-        >
-          Add Transform Component
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
+import { ComponentDetail } from './component-details/ComponentDetail';
 
 function extract_transform_defaults(transform: Transform | undefined) {
   return {
@@ -69,186 +49,173 @@ function TransformDetails() {
     }
   }, [currentlySelected]);
 
-  if (!currentlySelected) {
+  if (!currentlySelected || !transComp || !trans) {
     return <></>;
   }
-  if (!transComp || !trans) {
-    return <AddTransform />;
-  }
   return (
-    <Card className="my-4">
-      <CardHeader className="p-3 pb-1">
-        <CardTitle className="text-xl">Transform</CardTitle>
-      </CardHeader>
-      <CardContent className="p-3">
-        <form
-          name="transform-details"
-          id="transform-details"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (currentlySelected) {
-              // update transform
-              trans.translation = [
-                transform.translation.x,
-                transform.translation.y,
-                transform.translation.z,
-              ];
-              trans.rotation = [
-                transform.rotation.x,
-                transform.rotation.y,
-                transform.rotation.z,
-              ];
-              trans.scale = [
-                transform.scale.x,
-                transform.scale.y,
-                transform.scale.z,
-              ];
-              mvc.updateComponentOnCurrentlySelected('Transform', trans);
-            }
-          }}
-        >
-          <EntityComponentVec3Field
-            label="Translation"
-            vec3={[
-              {
-                label: 'X',
-                type: 'number',
-                id: 'translation-x',
-                startingValue: transform.translation.x,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    translation: { ...transform.translation, x: v },
-                  }),
-              },
-              {
-                label: 'Y',
-                type: 'number',
-                id: 'translation-y',
-                startingValue: transform.translation.y,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    translation: { ...transform.translation, y: v },
-                  }),
-              },
-              {
-                label: 'Z',
-                type: 'number',
-                id: 'translation-z',
-                startingValue: transform.translation.z,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    translation: { ...transform.translation, z: v },
-                  }),
-              },
-            ]}
-          />
+    <ComponentDetail
+      title="Transform"
+      onDestroy={() => {
+        mvc.removeComponentFromCurrentlySelected('Transform');
+      }}
+    >
+      <form
+        name="transform-details"
+        id="transform-details"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (currentlySelected) {
+            // update transform
+            trans.translation = [
+              transform.translation.x,
+              transform.translation.y,
+              transform.translation.z,
+            ];
+            trans.rotation = [
+              transform.rotation.x,
+              transform.rotation.y,
+              transform.rotation.z,
+            ];
+            trans.scale = [
+              transform.scale.x,
+              transform.scale.y,
+              transform.scale.z,
+            ];
+            mvc.updateComponentOnCurrentlySelected('Transform', trans);
+          }
+        }}
+      >
+        <EntityComponentVec3Field
+          label="Translation"
+          vec3={[
+            {
+              label: 'X',
+              type: 'number',
+              id: 'translation-x',
+              startingValue: transform.translation.x,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  translation: { ...transform.translation, x: v },
+                }),
+            },
+            {
+              label: 'Y',
+              type: 'number',
+              id: 'translation-y',
+              startingValue: transform.translation.y,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  translation: { ...transform.translation, y: v },
+                }),
+            },
+            {
+              label: 'Z',
+              type: 'number',
+              id: 'translation-z',
+              startingValue: transform.translation.z,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  translation: { ...transform.translation, z: v },
+                }),
+            },
+          ]}
+        />
 
-          <EntityComponentVec3Field
-            label="Rotation"
-            vec3={[
-              {
-                label: 'X',
-                type: 'number',
-                id: 'rotation-x',
-                startingValue: transform.rotation.x,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    rotation: { ...transform.rotation, x: v },
-                  }),
-              },
-              {
-                label: 'Y',
-                type: 'number',
-                id: 'rotation-y',
-                startingValue: transform.rotation.y,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    rotation: { ...transform.rotation, y: v },
-                  }),
-              },
-              {
-                label: 'Z',
-                type: 'number',
-                id: 'rotation-z',
-                startingValue: transform.rotation.z,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    rotation: { ...transform.rotation, z: v },
-                  }),
-              },
-            ]}
-          />
+        <EntityComponentVec3Field
+          label="Rotation"
+          vec3={[
+            {
+              label: 'X',
+              type: 'number',
+              id: 'rotation-x',
+              startingValue: transform.rotation.x,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  rotation: { ...transform.rotation, x: v },
+                }),
+            },
+            {
+              label: 'Y',
+              type: 'number',
+              id: 'rotation-y',
+              startingValue: transform.rotation.y,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  rotation: { ...transform.rotation, y: v },
+                }),
+            },
+            {
+              label: 'Z',
+              type: 'number',
+              id: 'rotation-z',
+              startingValue: transform.rotation.z,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  rotation: { ...transform.rotation, z: v },
+                }),
+            },
+          ]}
+        />
 
-          <EntityComponentVec3Field
-            label="Scale"
-            vec3={[
-              {
-                label: 'X',
-                type: 'number',
-                id: 'scale-x',
-                startingValue: transform.scale.x,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    scale: { ...transform.scale, x: v },
-                  }),
-              },
-              {
-                label: 'Y',
-                type: 'number',
-                id: 'scale-y',
-                startingValue: transform.scale.y,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    scale: { ...transform.scale, y: v },
-                  }),
-              },
-              {
-                label: 'Z',
-                type: 'number',
-                id: 'scale-z',
-                startingValue: transform.scale.z,
-                step: 0.1,
-                onChange: (v) =>
-                  updateTransform({
-                    ...transform,
-                    scale: { ...transform.scale, z: v },
-                  }),
-              },
-            ]}
-          />
+        <EntityComponentVec3Field
+          label="Scale"
+          vec3={[
+            {
+              label: 'X',
+              type: 'number',
+              id: 'scale-x',
+              startingValue: transform.scale.x,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  scale: { ...transform.scale, x: v },
+                }),
+            },
+            {
+              label: 'Y',
+              type: 'number',
+              id: 'scale-y',
+              startingValue: transform.scale.y,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  scale: { ...transform.scale, y: v },
+                }),
+            },
+            {
+              label: 'Z',
+              type: 'number',
+              id: 'scale-z',
+              startingValue: transform.scale.z,
+              step: 0.1,
+              onChange: (v) =>
+                updateTransform({
+                  ...transform,
+                  scale: { ...transform.scale, z: v },
+                }),
+            },
+          ]}
+        />
 
-          <div className="flex flex-row">
-            <Button id="submit-update-transform">Update Transform</Button>
-            <Button
-              className="ml-3"
-              onClick={(e) => {
-                e.preventDefault();
-                mvc.removeComponentFromCurrentlySelected('Transform');
-              }}
-              variant={'destructive'}
-            >
-              Remove
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        <div className="flex flex-row">
+          <Button id="submit-update-transform">Update Transform</Button>
+        </div>
+      </form>
+    </ComponentDetail>
   );
 }
 

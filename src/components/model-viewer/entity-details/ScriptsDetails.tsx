@@ -1,7 +1,6 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { ScriptData } from '@/engine/scripting/scripts.types';
 import { Button } from '@/shadcn/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shadcn/ui/card';
 import {
   Select,
   SelectContent,
@@ -12,27 +11,9 @@ import {
 } from '@/shadcn/ui/select';
 import { useEditorStore } from '@/store/editorStore';
 import { useEntityStore } from '@/store/entityStore';
+import { CodeIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-
-function AddScript() {
-  const mvc = useModelViewerCore();
-  return (
-    <Card className="p-1 my-4">
-      <CardHeader className="p-3 pb-0"></CardHeader>
-      <CardContent className="p-3">
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            mvc.addComponentToCurrentlySelected('Script', {});
-          }}
-          id="create-child"
-        >
-          Add Script Component
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
+import { ComponentDetail } from './component-details/ComponentDetail';
 
 const defaultScript: ScriptData = {
   update: 'none',
@@ -59,61 +40,53 @@ export function ScriptsDetails() {
     }
   }, [currentlySelected]);
 
-  if (!currentlySelected) {
+  if (!currentlySelected || !scriptsComp || !scriptData) {
     return <></>;
   }
-  if (!scriptsComp || !scriptData) {
-    return <AddScript />;
-  }
   return (
-    <Card className="my-4">
-      <CardHeader className="p-3 pb-1">
-        <CardTitle className="text-xl">Scripts</CardTitle>
-      </CardHeader>
-      <CardContent className="p-3">
-        <Card className="p-1 my-4">
-          <CardHeader className="p-3 pb-0">
-            <CardTitle className="text-md">On Update</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3">
-            <section className="mb-2">
-              <Select
-                onValueChange={(update) => {
-                  // update which script is used
-                  setScripts({ ...scripts, update });
-                  mvc.setScriptOnCurrentlySelected('update', update);
-                }}
-                value={scripts.update}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a script" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {scriptList.map((t) => (
-                      <SelectItem key={t} value={t}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </section>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                if (scripts.update) {
-                  editorStore.setCurrentTab('text-editor');
-                  editorStore.openFileTab(scripts.update);
-                  editorStore.setCurrentTextFile(scripts.update);
-                }
-              }}
-            >
-              Edit Script
-            </Button>
-          </CardContent>
-        </Card>
-      </CardContent>
-    </Card>
+    <ComponentDetail
+      title="Scripts"
+      onDestroy={() => {
+        mvc.removeComponentFromCurrentlySelected('Script');
+      }}
+    >
+      <div className="flex flex-row items-center">
+        <h3 className="mr-2 text-lg">Update</h3>
+        <Select
+          onValueChange={(update) => {
+            // update which script is used
+            setScripts({ ...scripts, update });
+            mvc.setScriptOnCurrentlySelected('update', update);
+          }}
+          value={scripts.update}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a script" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {scriptList.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {t}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Button
+          className="p-2 ml-2"
+          onClick={(e) => {
+            e.preventDefault();
+            if (scripts.update && scripts.update !== 'none') {
+              editorStore.setCurrentTab('text-editor');
+              editorStore.openFileTab(scripts.update);
+              editorStore.setCurrentTextFile(scripts.update);
+            }
+          }}
+        >
+          <CodeIcon size={16} />
+        </Button>
+      </div>
+    </ComponentDetail>
   );
 }
