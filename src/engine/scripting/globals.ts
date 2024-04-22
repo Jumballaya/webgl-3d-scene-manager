@@ -2,7 +2,6 @@ import { LuaEngine } from 'wasmoon';
 import { Entity } from '../ecs/Entity';
 import { Transform } from '../math/Transform';
 import { ECS } from '../ecs/ECS';
-import { Material } from '../render/material/Material';
 import { Mesh } from '../render/mesh/Mesh';
 
 export function setup_lua_util(lua: LuaEngine) {

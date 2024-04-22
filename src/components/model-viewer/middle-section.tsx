@@ -37,6 +37,9 @@ export default function MiddleSection() {
           </TabsList>
         </div>
         <Separator />
+        {
+          // #TODO: Move the console footer abd resizable panel group outside of the tabs content
+        }
         <TabsContent value="viewer" className="m-0 h-full">
           <ResizablePanelGroup
             direction="vertical"

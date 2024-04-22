@@ -17,6 +17,7 @@ export function TextFileViewer() {
               tabIndex={i}
               onSelect={() => {
                 editorStore.setCurrentTextFile(scriptName);
+                editorStore.openFileTab(scriptName);
               }}
               onCollapse={() => {}}
               type="blank"

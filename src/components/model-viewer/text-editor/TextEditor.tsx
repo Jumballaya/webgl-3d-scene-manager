@@ -3,6 +3,7 @@ import useModelViewerCore from '@/core/useModelViewerCore';
 import { useEditorStore } from '@/store/editorStore';
 import Editor from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
+import { FileTabs } from './FileTabs';
 
 export function TextEditor() {
   const { currentTextFile } = useEditorStore();
@@ -23,6 +24,7 @@ export function TextEditor() {
 
   return (
     <div className="h-full w-full">
+      <FileTabs />
       <Editor
         language="lua"
         theme={theme === 'dark' ? 'vs-dark' : 'light'}
