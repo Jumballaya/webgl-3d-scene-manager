@@ -14,11 +14,16 @@ import type { LoaderEntry } from '@/engine/assets/assets.types';
 import { LitMaterial } from '@/engine/render/material/LitMaterial';
 import { Material } from '@/engine/render/material/Material';
 import { Light } from '@/engine/render/light/Light';
-import { LightSystem, MeshRenderSystem } from '@/engine/ecs/System';
+import {
+  LightSystem,
+  MeshRenderSystem,
+  ScriptSystem,
+} from '@/engine/ecs/System';
 import { Renderer } from '@/engine/render/Renderer';
 import { apply_sobel } from './sobel_effect';
 import { ScriptManager } from '@/engine/scripting/ScriptManager';
 import { LuaFactory } from 'wasmoon';
+import { ScriptData } from '@/engine/scripting/scripts.types';
 
 ///////
 //
@@ -164,6 +169,8 @@ export class ModelViewerCore {
       this.entityStore.setTextureList(this.assetManager.textureList);
     }
 
+    this.ecs.registerSystem('Script', new ScriptSystem(this.scriptManager));
+
     this.initialized = true;
     return this;
   }
@@ -171,6 +178,7 @@ export class ModelViewerCore {
   public render() {
     this.ecs.runSystem('Lights');
     this.ecs.runSystem('Render');
+    this.ecs.runSystem('Script');
   }
 
   // Entity API
@@ -261,6 +269,20 @@ export class ModelViewerCore {
       this.updateComponentOnEntity(this.currentlySelected, name, data);
       this.syncCurrentlySelected();
       this.syncEntities();
+    }
+  }
+
+  public setScriptOnCurrentlySelected(type: 'update', scriptName: string) {
+    if (!this.currentlySelected) return;
+    const scriptComp =
+      this.currentlySelected.getComponent<ScriptData>('Script');
+    if (!scriptComp) return;
+
+    switch (type) {
+      case 'update': {
+        scriptComp.data.update = scriptName;
+        break;
+      }
     }
   }
 

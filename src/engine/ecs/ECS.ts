@@ -20,7 +20,7 @@ const _components = {
 };
 
 export class ECS {
-  public componentList = ['Name', 'Transform', 'Mesh', 'Light'];
+  public componentList = ['Name', 'Transform', 'Mesh', 'Light', 'Script'];
   private components: ComponentMap = {};
   private entities: Entity[] = [];
   private systems: Map<string, System> = new Map();

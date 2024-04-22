@@ -22,7 +22,7 @@ function AddScript() {
         <Button
           onClick={(e) => {
             e.preventDefault();
-            // mvc.addComponentToCurrentlySelected('Script', {});
+            mvc.addComponentToCurrentlySelected('Script', {});
           }}
           id="create-child"
         >
@@ -37,7 +37,7 @@ export function ScriptsDetails() {
   const { currentlySelected, scriptList } = useEntityStore();
   const mvc = useModelViewerCore();
   const scriptsComp = currentlySelected?.components.filter(
-    (c) => c[0] === 'Scripts',
+    (c) => c[0] === 'Script',
   )[0] as [string, ScriptData] | undefined;
   const scriptData = scriptsComp?.[1];
   const [scripts, setScripts] = useState<ScriptData | null>(scriptData ?? null);
@@ -78,11 +78,12 @@ export function ScriptsDetails() {
                 onValueChange={(update) => {
                   // update which script is used
                   setScriptUI({ ...scriptUI, update });
+                  mvc.setScriptOnCurrentlySelected('update', update);
                 }}
                 value={scriptUI.update}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a texture" />
+                  <SelectValue placeholder="Select a script" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
