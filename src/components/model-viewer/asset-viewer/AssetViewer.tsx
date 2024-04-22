@@ -1,10 +1,10 @@
 import { Separator } from '@/shadcn/ui/separator';
 import { useState } from 'react';
 import useModelViewerCore from '@/core/useModelViewerCore';
-import { AssetList } from './asset-viewer/AssetList';
-import { AssetTypeSelector } from './asset-viewer/AssetTypeSelector';
-import { FileUploader } from './asset-viewer/FileUploader';
-import { AssetDetails } from './asset-viewer/AssetDetails';
+import { AssetList } from './AssetList';
+import { AssetTypeSelector } from './AssetTypeSelector';
+import { FileUploader } from './FileUploader';
+import { AssetDetails } from './AssetDetails';
 
 const types = ['none', 'geometries', 'materials', 'textures', 'scripts'];
 

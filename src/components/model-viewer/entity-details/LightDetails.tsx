@@ -6,7 +6,7 @@ import { Button } from '@/shadcn/ui/button';
 import { PointLight } from '@/engine/render/light/PointLight';
 import { SpotLight } from '@/engine/render/light/SpotLight';
 import { Light } from '@/engine/render/light/Light';
-import { Mesh } from '@/renderer/viewer/Mesh';
+import { Mesh } from '@/engine/render/mesh/Mesh';
 import {
   Select,
   SelectContent,

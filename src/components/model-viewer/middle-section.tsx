@@ -6,7 +6,7 @@ import {
 import { Separator } from '@/shadcn/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/ui/tabs';
 import CanvasViewer from '../CanvasViewer';
-import { TextEditor } from './TextEditor';
+import { TextEditor } from './text-editor/TextEditor';
 import { useEditorStore } from '@/store/editorStore';
 
 export default function MiddleSection() {

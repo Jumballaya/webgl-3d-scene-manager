@@ -10,7 +10,7 @@ export function AssetList(props: {
   const { assetList, currentType, selected, onSelect } = props;
 
   return (
-    <ScrollArea className="h-44">
+    <ScrollArea className="min-h-44 h-full">
       <ul className="mx-2 list-none">
         {assetList.map((e, i) => (
           <EntityListItem

@@ -1,7 +1,7 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { AddRenderComponent } from './AddRenderComponent';
-import { LightDetails } from './light-details';
-import MeshDetails from './mesh-details';
+import { LightDetails } from './LightDetails';
+import MeshDetails from './MeshDetails';
 
 export function RenderComponentSection() {
   const mvc = useModelViewerCore();

@@ -5,7 +5,7 @@ import { EditMenuItem } from './model-viewer/menu-bar/EditMenuItem';
 
 const MenuBar = () => {
   return (
-    <Menubar>
+    <Menubar className="border-0 border-b">
       <FileMenuItem />
       <EditMenuItem />
       <ViewMenuItem />

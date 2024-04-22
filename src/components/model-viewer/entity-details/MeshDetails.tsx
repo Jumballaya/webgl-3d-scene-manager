@@ -10,7 +10,7 @@ import {
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { Button } from '@/shadcn/ui/button';
 import { AddRenderComponent } from './AddRenderComponent';
-import { Mesh } from '@/renderer/viewer/Mesh';
+import { Mesh } from '@/engine/render/mesh/Mesh';
 import { ReactElement } from 'react';
 import { cn } from '@/shadcn/lib/utils';
 import { useEntityStore } from '@/store/entityStore';

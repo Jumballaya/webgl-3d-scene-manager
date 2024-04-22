@@ -5,7 +5,7 @@ import { ThemeProvider } from './core/theme';
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <main className="h-screen">
+      <main className="h-screen border rounded">
         <MenuBar />
         <div className="md:hidden"></div>
         <div className="hidden flex-col md:flex h-95">

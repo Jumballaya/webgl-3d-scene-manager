@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shadcn/ui/select';
-import { Mesh } from '@/renderer/viewer/Mesh';
+import { Mesh } from '@/engine/render/mesh/Mesh';
 import { LitMaterial } from '@/engine/render/material/LitMaterial';
 import { vec3 } from 'gl-matrix';
 import useModelViewerCore from '@/core/useModelViewerCore';

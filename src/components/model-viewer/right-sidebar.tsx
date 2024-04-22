@@ -1,5 +1,5 @@
 import { ResizablePanel } from '@/shadcn/ui/resizable';
-import EntityDetails from './EntityDetails';
+import EntityDetails from './entity-details/EntityDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/ui/tabs';
 import { Separator } from '@/shadcn/ui/separator';
 
@@ -25,7 +25,7 @@ export default function RightSidebar() {
         </div>
         <Separator />
         <TabsContent value="viewer" className="m-0 h-full">
-          <div className="w-100 h-100 flex flex-col items-center justify-center my-6">
+          <div className="w-100 h-100 flex flex-col items-center justify-center">
             <EntityDetails />
           </div>
         </TabsContent>
