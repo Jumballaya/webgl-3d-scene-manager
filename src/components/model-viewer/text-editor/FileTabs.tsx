@@ -1,4 +1,5 @@
 import { useTheme } from '@/core/theme';
+import { ScrollArea, ScrollBar } from '@/shadcn/ui/scroll-area';
 import { Separator } from '@/shadcn/ui/separator';
 import { useEditorStore } from '@/store/editorStore';
 import { CodeIcon, XIcon } from 'lucide-react';
@@ -52,23 +53,26 @@ function FileTab(props: {
 export function FileTabs() {
   const editorStore = useEditorStore();
   return (
-    <nav className="w-full mb-4">
-      <ul className="flex flex-row flex-nowrap w-full h-11">
-        {editorStore.openFileTabs.map((tab) => (
-          <FileTab
-            key={`${tab}--text-editor-tab`}
-            tabName={tab}
-            selected={tab === editorStore.currentTextFile}
-            onSelect={(t) => {
-              editorStore.setCurrentTextFile(t);
-            }}
-            onClose={(t) => {
-              editorStore.closeFileTab(t);
-            }}
-          />
-        ))}
-      </ul>
-      <Separator />
-    </nav>
+    <ScrollArea className="w-full whitespace-nowrap">
+        <nav className="w-full mb-4">
+          <ul className="flex flex-row flex-nowrap w-full h-11">
+            {editorStore.openFileTabs.map((tab) => (
+              <FileTab
+                key={`${tab}--text-editor-tab`}
+                tabName={tab}
+                selected={tab === editorStore.currentTextFile}
+                onSelect={(t) => {
+                  editorStore.setCurrentTextFile(t);
+                }}
+                onClose={(t) => {
+                  editorStore.closeFileTab(t);
+                }}
+              />
+            ))}
+          </ul>
+          <ScrollBar orientation='horizontal' />
+          <Separator />
+        </nav>
+    </ScrollArea>
   );
 }
