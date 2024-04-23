@@ -103,6 +103,10 @@ export class ECS {
     this.prefabs.set(prefab.name, prefab);
   }
 
+  public prefabList() {
+    return Array.from(this.prefabs.keys());
+  }
+
   public addComponentToEntity<T>(
     entity: Entity,
     name: string,

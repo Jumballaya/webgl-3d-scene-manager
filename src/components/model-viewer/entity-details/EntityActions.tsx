@@ -81,7 +81,7 @@ export function EntityActions() {
               const entity = mvc.getCurrentlySelected();
               if (entity) {
                 const prefab = Prefab.FromEntity(entity, mvc.ecs);
-                mvc.ecs.registerPrefab(prefab);
+                mvc.registerPrefab(prefab);
               }
             }}
             id="create-prefab"

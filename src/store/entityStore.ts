@@ -9,6 +9,7 @@ export type EntityStoreState = {
   geometryList: string[];
   materialList: string[];
   scriptList: string[];
+  prefabList: string[];
   updateCurrentlySelected: (e: SerializedEntity | null) => void;
   setEntities: (entities: SerializedEntity[]) => void;
   setTextureList: (textures: string[]) => void;
@@ -16,6 +17,7 @@ export type EntityStoreState = {
   setGeometryList: (geometries: string[]) => void;
   setMaterialList: (materials: string[]) => void;
   setScriptList: (scripts: string[]) => void;
+  setPrefabsList: (prefabs: string[]) => void;
 };
 
 export const useEntityStore = create<EntityStoreState>((set) => ({
@@ -26,6 +28,7 @@ export const useEntityStore = create<EntityStoreState>((set) => ({
   textureList: ['none'],
   materialList: ['none'],
   scriptList: ['none'],
+  prefabList: ['none'],
   updateCurrentlySelected: (e: SerializedEntity | null) =>
     set((state) => ({
       ...state,
@@ -60,5 +63,10 @@ export const useEntityStore = create<EntityStoreState>((set) => ({
     set((state) => ({
       ...state,
       scriptList: ['none', ...scriptList],
+    })),
+  setPrefabsList: (prefabList: string[]) =>
+    set((state) => ({
+      ...state,
+      prefabList: ['none', ...prefabList],
     })),
 }));

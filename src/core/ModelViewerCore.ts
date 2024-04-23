@@ -25,6 +25,7 @@ import { ScriptManager } from '@/engine/scripting/ScriptManager';
 import { LuaFactory } from 'wasmoon';
 import { ScriptData } from '@/engine/scripting/scripts.types';
 import { PostProccessStep } from '@/engine/render/PostProcessingStep';
+import { Prefab } from '@/engine/ecs/Prefab';
 
 ///////
 //
@@ -236,6 +237,11 @@ export class ModelViewerCore {
     const ent = this.ecs.createPrefab(name);
     this.syncEntities();
     return ent;
+  }
+
+  public registerPrefab(prefab: Prefab) {
+    this.ecs.registerPrefab(prefab);
+    this.entityStore?.setPrefabsList(this.ecs.prefabList());
   }
 
   public addChildToEntity(ent: Entity, child: Entity) {

@@ -1,18 +1,64 @@
 import { Separator } from '@/shadcn/ui/separator';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { AssetList } from './AssetList';
 import { AssetTypeSelector } from './AssetTypeSelector';
 import { FileUploader } from './FileUploader';
 import { AssetDetails } from './AssetDetails';
+import { useEntityStore } from '@/store/entityStore';
 
-const types = ['none', 'geometries', 'materials', 'textures', 'scripts'];
+const types = [
+  'none',
+  'geometries',
+  'materials',
+  'textures',
+  'scripts',
+  'prefabs',
+];
 
 export function AssetViewer() {
   const mvc = useModelViewerCore();
+  const { geometryList, materialList, textureList, scriptList, prefabList } =
+    useEntityStore();
   const [currentType, setCurrentType] = useState<string>('none');
   const [assetList, setAssetList] = useState<string[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+
+  useEffect(() => {
+    switch (currentType) {
+      case 'geometries': {
+        setAssetList(geometryList.filter((e) => e !== 'none'));
+        break;
+      }
+      case 'materials': {
+        setAssetList(materialList.filter((e) => e !== 'none'));
+        break;
+      }
+      case 'textures': {
+        setAssetList(textureList.filter((e) => e !== 'none'));
+        break;
+      }
+      case 'scripts': {
+        setAssetList(scriptList.filter((e) => e !== 'none'));
+        break;
+      }
+      case 'prefabs': {
+        setAssetList(prefabList.filter((e) => e !== 'none'));
+        break;
+      }
+      default: {
+        setAssetList([]);
+        break;
+      }
+    }
+  }, [
+    currentType,
+    geometryList,
+    materialList,
+    textureList,
+    scriptList,
+    prefabList,
+  ]);
 
   return (
     <section>

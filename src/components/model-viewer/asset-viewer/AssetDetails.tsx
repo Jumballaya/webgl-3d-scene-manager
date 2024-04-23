@@ -2,6 +2,7 @@ import useModelViewerCore from '@/core/useModelViewerCore';
 import { Texture } from '@/engine/render/gl/Texture';
 import { Geometry } from '@/engine/render/geometry/Geometry';
 import { ScrollArea } from '@/shadcn/ui/scroll-area';
+import { PrefabDetails } from './PrefabDetails';
 
 function DetailHeader(props: { name: string }) {
   return <h3 className="py-4 px-4 font-bold">{props.name}</h3>;
@@ -29,6 +30,9 @@ function AssetDetail(props: { selected: string; currentType: string }) {
         break;
       }
       return <GeometryDetail geometry={geometry} />;
+    }
+    case 'prefabs': {
+      return <PrefabDetails prefabName={selected} />;
     }
   }
   return <></>;
