@@ -171,8 +171,8 @@ export class ModelViewerCore {
     }
 
     this.ecs.registerSystem('Script', new ScriptSystem(this.scriptManager));
-
     this.initialized = true;
+
     return this;
   }
 

@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Transform } from '@/engine/math/Transform';
 import { Separator } from '@/shadcn/ui/separator';
+import { Prefab } from '@/engine/ecs/Prefab';
 
 export function EntityActions() {
   const mvc = useModelViewerCore();
@@ -63,6 +64,7 @@ export function EntityActions() {
               e.preventDefault();
               // const ent = mvc.getCurrentlySelected();
               // clone entity to the same parent/child level the original is on
+              mvc.ecs.createPrefab('Suzanne');
             }}
             id="clone-entity"
             variant={'secondary'}
@@ -73,8 +75,14 @@ export function EntityActions() {
             size="sm"
             className="mr-2 mt-2 p-2"
             onClick={(e) => {
+              // Generate a prefab from this entity
               e.preventDefault();
-              mvc.deleteEntity(currentlySelected.id);
+              const entity = mvc.getCurrentlySelected();
+              if (entity) {
+                const prefab = Prefab.FromEntity(entity, mvc.ecs);
+                mvc.ecs.registerPrefab(prefab);
+                console.log(mvc.ecs);
+              }
             }}
             id="create-prefab"
             variant={'secondary'}
@@ -86,7 +94,8 @@ export function EntityActions() {
             className="mt-2 p-2"
             onClick={(e) => {
               e.preventDefault();
-              // Generate a prefab from this entity
+              e.preventDefault();
+              mvc.deleteEntity(currentlySelected.id);
             }}
             id="delete-entity"
             variant={'destructive'}

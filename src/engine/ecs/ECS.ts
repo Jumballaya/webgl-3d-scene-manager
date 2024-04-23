@@ -8,6 +8,7 @@ import {
   TransformComponent,
 } from './Component';
 import { System } from './System';
+import { Prefab } from './Prefab';
 
 type ComponentMap = Record<string, Record<number, Component<unknown>>>;
 
@@ -24,6 +25,7 @@ export class ECS {
   private components: ComponentMap = {};
   private entities: Entity[] = [];
   private systems: Map<string, System> = new Map();
+  private prefabs: Map<string, Prefab> = new Map();
 
   constructor() {
     for (const c of this.componentList) {
@@ -61,6 +63,21 @@ export class ECS {
       }
       this.entities = entityList;
     }
+  }
+
+  public createPrefab(name: string, override?: unknown[]) {
+    const prefab = this.prefabs.get(name);
+    console.log(prefab);
+    if (prefab) {
+      const ent = prefab.create(override ?? []);
+      this.entities.push(ent);
+      return ent;
+    }
+    return null;
+  }
+
+  public registerPrefab(prefab: Prefab) {
+    this.prefabs.set(prefab.name, prefab);
   }
 
   public addComponentToEntity<T>(
