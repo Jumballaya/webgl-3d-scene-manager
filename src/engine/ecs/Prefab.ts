@@ -9,19 +9,21 @@ type PrefabData = {
 
 export class Prefab {
   private ecs: ECS;
-  private components: Array<[string, unknown]> = [];
+  private data: PrefabData;
 
   public name: string;
 
   constructor(ecs: ECS, data: PrefabData) {
     this.name = data.name;
     this.ecs = ecs;
-    for (const [className, params] of data.components) {
-      this.components.push([className, params]);
-    }
+    this.data = data;
   }
 
   public static FromEntity(entity: Entity, ecs: ECS): Prefab {
+    return new Prefab(ecs, this.DataFromEntity(entity));
+  }
+
+  public static DataFromEntity(entity: Entity): PrefabData {
     const data: PrefabData = {
       name: '',
       components: [],
@@ -43,34 +45,35 @@ export class Prefab {
       }
     }
 
-    return new Prefab(ecs, data);
+    for (const child of entity.children) {
+        data.children.push(Prefab.DataFromEntity(child));
+    }
+
+    return data;
   }
 
-  public create(override: unknown[]) {
+  public create() {
+    return this.entityFromData(this.data);
+  }
+
+  private entityFromData(data: PrefabData): Entity {
     const entity = this.ecs.createEntity();
     let i = 0;
-    for (const compEntry of this.components) {
-      const overrideParams = override[i];
+    for (const compEntry of data.components) {
       const [className, params] = compEntry;
-      if (overrideParams) {
-        if (isClonable(overrideParams)) {
-          this.ecs.addComponentToEntity(
-            entity,
-            className,
-            overrideParams.clone(),
-          );
-        } else {
-          this.ecs.addComponentToEntity(entity, className, overrideParams);
-        }
-      } else {
         if (isClonable(params)) {
           this.ecs.addComponentToEntity(entity, className, params.clone());
         } else {
           this.ecs.addComponentToEntity(entity, className, params);
         }
-      }
       i++;
     }
+
+    for (const child of data.children) {
+        const childEnt = this.entityFromData(child);
+        entity.addChild(childEnt);
+    }
+
     return entity;
   }
 }
