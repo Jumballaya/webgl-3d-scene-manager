@@ -46,7 +46,7 @@ export class Prefab {
     }
 
     for (const child of entity.children) {
-        data.children.push(Prefab.DataFromEntity(child));
+      data.children.push(Prefab.DataFromEntity(child));
     }
 
     return data;
@@ -58,20 +58,18 @@ export class Prefab {
 
   private entityFromData(data: PrefabData): Entity {
     const entity = this.ecs.createEntity();
-    let i = 0;
     for (const compEntry of data.components) {
       const [className, params] = compEntry;
-        if (isClonable(params)) {
-          this.ecs.addComponentToEntity(entity, className, params.clone());
-        } else {
-          this.ecs.addComponentToEntity(entity, className, params);
-        }
-      i++;
+      if (isClonable(params)) {
+        this.ecs.addComponentToEntity(entity, className, params.clone());
+      } else {
+        this.ecs.addComponentToEntity(entity, className, params);
+      }
     }
 
     for (const child of data.children) {
-        const childEnt = this.entityFromData(child);
-        entity.addChild(childEnt);
+      const childEnt = this.entityFromData(child);
+      entity.addChild(childEnt);
     }
 
     return entity;
