@@ -225,6 +225,18 @@ export class ModelViewerCore {
     this.syncEntities();
   }
 
+  public cloneEntity(entity: Entity): Entity {
+    const clone = this.ecs.cloneEntity(entity);
+    this.syncEntities();
+    return clone;
+  }
+
+  public spawnPrefab(name: string) {
+    const ent = this.ecs.createPrefab(name);
+    this.syncEntities();
+    return ent;
+  }
+
   public addChildToEntity(ent: Entity, child: Entity) {
     ent.addChild(child);
     this.syncCurrentlySelected();

@@ -64,8 +64,8 @@ export function EntityActions() {
               e.preventDefault();
               const ent = mvc.getCurrentlySelected();
               if (ent) {
-                mvc.ecs.cloneEntity(ent);
-                mvc.setCurrentlySelected(ent);
+                const clone = mvc.cloneEntity(ent);
+                mvc.setCurrentlySelected(clone);
               }
             }}
             id="clone-entity"
