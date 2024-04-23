@@ -189,6 +189,7 @@ export class ModelViewerCore {
 
   public setCurrentlySelected(entity: Entity | null) {
     this.currentlySelected = entity;
+    this.entityStore?.updateCurrentlySelected(entity?.serialize() ?? null);
     this.syncCurrentlySelected();
   }
 
@@ -297,10 +298,13 @@ export class ModelViewerCore {
         break;
       }
     }
+    this.syncCurrentlySelected();
+    this.syncEntities();
   }
 
   public removeComponentFromEntity(entity: Entity, name: string) {
     this.ecs.removeComponentFromEntity(entity, name);
+    this.syncEntities();
   }
 
   public removeComponentFromCurrentlySelected(name: string) {

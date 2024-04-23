@@ -8,7 +8,6 @@ import useModelViewerCore from '@/core/useModelViewerCore';
 export default function EntityList() {
   const { entities, currentlySelected } = useEntityStore((state) => state);
   const mvc = useModelViewerCore();
-
   return (
     <div>
       <ScrollArea className="h-48">

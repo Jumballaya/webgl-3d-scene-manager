@@ -94,7 +94,7 @@ function TransformDetails() {
               id: 'translation-x',
               startingValue: transform.translation.x,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   translation: { ...transform.translation, x: v },
@@ -106,7 +106,7 @@ function TransformDetails() {
               id: 'translation-y',
               startingValue: transform.translation.y,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   translation: { ...transform.translation, y: v },
@@ -118,7 +118,7 @@ function TransformDetails() {
               id: 'translation-z',
               startingValue: transform.translation.z,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   translation: { ...transform.translation, z: v },
@@ -136,7 +136,7 @@ function TransformDetails() {
               id: 'rotation-x',
               startingValue: transform.rotation.x,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   rotation: { ...transform.rotation, x: v },
@@ -148,7 +148,7 @@ function TransformDetails() {
               id: 'rotation-y',
               startingValue: transform.rotation.y,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   rotation: { ...transform.rotation, y: v },
@@ -160,7 +160,7 @@ function TransformDetails() {
               id: 'rotation-z',
               startingValue: transform.rotation.z,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   rotation: { ...transform.rotation, z: v },
@@ -178,7 +178,7 @@ function TransformDetails() {
               id: 'scale-x',
               startingValue: transform.scale.x,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   scale: { ...transform.scale, x: v },
@@ -190,7 +190,7 @@ function TransformDetails() {
               id: 'scale-y',
               startingValue: transform.scale.y,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   scale: { ...transform.scale, y: v },
@@ -202,7 +202,7 @@ function TransformDetails() {
               id: 'scale-z',
               startingValue: transform.scale.z,
               step: 0.1,
-              onChange: (v) =>
+              onChange: (v: number) =>
                 updateTransform({
                   ...transform,
                   scale: { ...transform.scale, z: v },
