@@ -4,15 +4,20 @@ import { Label } from '@/shadcn/ui/label';
 import type { InputProps } from './component-details.types';
 
 export function EntityComponentField(props: InputProps) {
+  if (props.type !== 'number' && props.type !== 'text') {
+    return null;
+  }
   return (
-    <FormItem className="flex flex-row items-baseline">
+    <FormItem
+      className={`flex flex-row items-baseline mr-2 ${props.className}`}
+    >
       <Label htmlFor={props.id} className="mr-2">
         {props.label}
       </Label>
       <Input
         type={props.type}
         id={props.id}
-        className="h-8 w-14"
+        className="h-8 px-1"
         value={props.startingValue}
         step={props.type === 'number' ? props.step : undefined}
         min={props.type === 'number' ? props.min : undefined}

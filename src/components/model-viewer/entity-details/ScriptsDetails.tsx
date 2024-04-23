@@ -14,6 +14,7 @@ import { useEntityStore } from '@/store/entityStore';
 import { CodeIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ComponentDetail } from './component-details/ComponentDetail';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
 
 const defaultScript: ScriptData = {
   update: 'none',
@@ -73,19 +74,24 @@ export function ScriptsDetails() {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Button
-          className="p-2 ml-2"
-          onClick={(e) => {
-            e.preventDefault();
-            if (scripts.update && scripts.update !== 'none') {
-              editorStore.setCurrentTab('text-editor');
-              editorStore.openFileTab(scripts.update);
-              editorStore.setCurrentTextFile(scripts.update);
-            }
-          }}
-        >
-          <CodeIcon size={16} />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className="p-2 ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                if (scripts.update && scripts.update !== 'none') {
+                  editorStore.setCurrentTab('text-editor');
+                  editorStore.openFileTab(scripts.update);
+                  editorStore.setCurrentTextFile(scripts.update);
+                }
+              }}
+            >
+              <CodeIcon size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Edit Script</TooltipContent>
+        </Tooltip>
       </div>
     </ComponentDetail>
   );

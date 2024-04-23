@@ -10,8 +10,10 @@ import useModelViewerCore from '@/core/useModelViewerCore';
 import { Button } from '@/shadcn/ui/button';
 import { Mesh } from '@/engine/render/mesh/Mesh';
 import { useEntityStore } from '@/store/entityStore';
-import MaterialDetails from './material-details';
+import MaterialDetails from './MaterialDetails';
 import { ComponentDetail } from './component-details/ComponentDetail';
+import { FilePlus2Icon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
 
 function MeshDetails() {
   const mvc = useModelViewerCore();
@@ -82,20 +84,26 @@ function MeshDetails() {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className="p-2 ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                const name = `new-material-${crypto.randomUUID()}`;
+                const material = mvc.createMaterial(name);
+                if (material) {
+                  meshComp.data.material = material;
+                  mvc.updateComponentOnCurrentlySelected('Mesh', meshComp.data);
+                }
+              }}
+            >
+              <FilePlus2Icon size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Create New Material</TooltipContent>
+        </Tooltip>
       </div>
-      <Button
-        onClick={() => {
-          const name = `new-material-${crypto.randomUUID()}`;
-          const material = mvc.createMaterial(name);
-          if (material) {
-            meshComp.data.material = material;
-            mvc.updateComponentOnCurrentlySelected('Mesh', meshComp.data);
-          }
-        }}
-        className="mt-5"
-      >
-        Create New Material
-      </Button>
       <MaterialDetails />
     </ComponentDetail>
   );

@@ -16,7 +16,7 @@ import { loadImage } from '@/engine/assets/loaders';
 import { Surface } from './Surface';
 import { FrameBuffer } from './FrameBuffer';
 
-type EnableOption = 'cull_face' | 'depth' | 'blend';
+type EnableOption = 'cull_face' | 'depth' | 'blend' | 'multisample';
 type ClearOption = 'color' | 'depth';
 
 function getDrawMode(m: DrawMode): number {
@@ -94,6 +94,11 @@ export class WebGL {
           this.context.enable(this.context.BLEND);
           break;
         }
+        case 'multisample': {
+          this.context.enable(this.context.SAMPLE_COVERAGE);
+          this.context.sampleCoverage(0.5, false);
+          break;
+        }
       }
     }
   }
@@ -111,6 +116,10 @@ export class WebGL {
         }
         case 'blend': {
           this.context.disable(this.context.BLEND);
+          break;
+        }
+        case 'multisample': {
+          this.context.disable(this.context.SAMPLE_COVERAGE);
           break;
         }
       }

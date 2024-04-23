@@ -4,9 +4,10 @@ export type TextDetailProps = {
   type: 'text';
   startingValue: string;
   onChange: (v: string) => void;
+  className?: string;
 };
 
-export type NumbertDetailProps = {
+export type NumberDetailProps = {
   label: string;
   id: string;
   type: 'number';
@@ -15,6 +16,21 @@ export type NumbertDetailProps = {
   step?: number;
   min?: number;
   max?: number;
+  className?: string;
 };
 
-export type InputProps = TextDetailProps | NumbertDetailProps;
+export type SelectDetailProps = {
+  label: string;
+  id: string;
+  type: 'select';
+  value: string;
+  onChange: (v: string) => void;
+  list: string[];
+  className?: string;
+  placeholder?: string;
+};
+
+export type InputProps =
+  | TextDetailProps
+  | NumberDetailProps
+  | SelectDetailProps;
