@@ -9,6 +9,7 @@ import {
 } from './Component';
 import { System } from './System';
 import { Prefab } from './Prefab';
+import { isClonable } from './util';
 
 type ComponentMap = Record<string, Record<number, Component<unknown>>>;
 
@@ -65,11 +66,33 @@ export class ECS {
     }
   }
 
-  public createPrefab(name: string, override?: unknown[]) {
+  public cloneEntity(entity: Entity) {
+    const components = entity.componentList;
+    const newEnt = this.createEntity();
+
+    for (const compName of components) {
+      const component = entity.getComponent(compName);
+      if (component) {
+        if (isClonable(component.data)) {
+          this.addComponentToEntity(newEnt, compName, component.data.clone());
+        } else {
+          this.addComponentToEntity(newEnt, compName, component.data);
+        }
+      }
+    }
+
+    for (const child of entity.children) {
+      newEnt.addChild(this.cloneEntity(child));
+    }
+
+    return newEnt;
+  }
+
+  public createPrefab(name: string) {
     const prefab = this.prefabs.get(name);
     console.log(prefab);
     if (prefab) {
-      const ent = prefab.create(override ?? []);
+      const ent = prefab.create();
       this.entities.push(ent);
       return ent;
     }

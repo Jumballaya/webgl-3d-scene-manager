@@ -62,9 +62,11 @@ export function EntityActions() {
             className="mr-2 mt-2 p-2"
             onClick={(e) => {
               e.preventDefault();
-              // const ent = mvc.getCurrentlySelected();
-              // clone entity to the same parent/child level the original is on
-              mvc.ecs.createPrefab('Suzanne');
+              const ent = mvc.getCurrentlySelected();
+              if (ent) {
+                mvc.ecs.cloneEntity(ent);
+                mvc.setCurrentlySelected(ent);
+              }
             }}
             id="clone-entity"
             variant={'secondary'}
@@ -75,19 +77,17 @@ export function EntityActions() {
             size="sm"
             className="mr-2 mt-2 p-2"
             onClick={(e) => {
-              // Generate a prefab from this entity
               e.preventDefault();
               const entity = mvc.getCurrentlySelected();
               if (entity) {
                 const prefab = Prefab.FromEntity(entity, mvc.ecs);
                 mvc.ecs.registerPrefab(prefab);
-                console.log(mvc.ecs);
               }
             }}
             id="create-prefab"
             variant={'secondary'}
           >
-            Prefab
+            Generate Prefab
           </Button>
           <Button
             size="sm"

@@ -1,5 +1,6 @@
 import { ECS } from './ECS';
 import { Entity } from './Entity';
+import { isClonable } from './util';
 
 type PrefabData = {
   name: string;
@@ -74,15 +75,4 @@ export class Prefab {
 
     return entity;
   }
-}
-
-function isClonable(obj: unknown): obj is { clone: () => unknown } {
-  if (typeof obj === 'string') return false;
-  if (typeof obj === 'number') return false;
-  if (typeof obj === 'boolean') return false;
-  if (typeof obj === 'symbol') return false;
-  if (typeof obj === 'bigint') return false;
-  if (typeof obj === 'undefined') return false;
-  if (obj === null) return false;
-  return Object.keys(obj).includes('clone');
 }
