@@ -25,6 +25,7 @@ import { LuaFactory } from 'wasmoon';
 import { ScriptData } from '@/engine/scripting/scripts.types';
 import { PostProccessStep } from '@/engine/render/PostProcessingStep';
 import { Prefab } from '@/engine/ecs/Prefab';
+import { Bindings } from '@/engine/controls/Bindings';
 
 ///////
 //
@@ -186,8 +187,59 @@ export class ModelViewerCore {
     }
 
     this.ecs.registerSystem('Script', new ScriptSystem(this.scriptManager));
-    this.initialized = true;
 
+    const bindings = new Bindings({
+      bindings: [
+        {
+          action: 'Create New Blank Entity',
+          keys: ['Alt', 'e'],
+          onKeyDown: () => {
+            const entity = this.addEntity();
+            this.setCurrentlySelected(entity);
+          },
+          onKeyUp: () => {},
+        },
+        {
+          action: 'Create New Mesh Entity',
+          keys: ['Alt', 'm'],
+          onKeyDown: () => {
+            const entity = this.addEntity('mesh');
+            this.setCurrentlySelected(entity);
+          },
+          onKeyUp: () => {},
+        },
+        {
+          action: 'Create New Light Entity',
+          keys: ['Alt', 'l'],
+          onKeyDown: () => {
+            const entity = this.addEntity('light');
+            this.setCurrentlySelected(entity);
+          },
+          onKeyUp: () => {},
+        },
+        {
+          action: 'Create New Blank Lua Script File',
+          keys: ['Alt', 's'],
+          onKeyDown: () => {
+            this.addScript(`lua-script-${crypto.randomUUID()}`, '');
+          },
+          onKeyUp: () => {},
+        },
+        {
+          action: 'Create New Blank Post Processor File',
+          keys: ['Alt', 'p'],
+          onKeyDown: () => {
+            this.addPostEffects(`post-effect-${crypto.randomUUID()}`);
+          },
+          onKeyUp: () => {},
+        },
+      ],
+    });
+
+    this.controller.registerBindings(bindings);
+    this.controller.enable();
+
+    this.initialized = true;
     return this;
   }
 

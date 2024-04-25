@@ -1,4 +1,5 @@
 import { vec2 } from 'gl-matrix';
+import { Bindings } from './Bindings';
 
 type ControllerMouseMoveEvent = {
   previousPosition: vec2;
@@ -62,11 +63,23 @@ export class Controller {
     pointerlockchange: [],
   };
 
-  private keys: Record<string, boolean> = {};
+  private keys: Map<string, number> = new Map(); // keyCode: startTime
+  private lastKey = '';
+  private combos: Array<string> = [];
+  private comboThresholdMS = 250;
+  private comboExact = false;
+  private timeSinceLastKeyPress = Infinity;
   private curMousePosition: vec2 = [0, 0];
   private prevMousePosition: vec2 | null = null;
 
+  private bindings?: Bindings;
+
   protected enabled = false;
+
+  constructor(comboThresholdMS = 250, comboExact = false) {
+    this.comboThresholdMS = comboThresholdMS;
+    this.comboExact = comboExact;
+  }
 
   public addEventListener<T extends ControllerEventName>(
     event: T,
@@ -138,8 +151,41 @@ export class Controller {
     };
 
     document.addEventListener('keydown', (e) => {
+      if (
+        this.bindings &&
+        this.bindings.getBindingByKey([...this.combos, e.key])
+      ) {
+        e.preventDefault();
+      }
       if (!this.enabled) return;
-      this.keys[e.key] = true;
+      const key = e.key;
+      const entry = this.keys.get(key);
+      if (entry) return;
+
+      const time = Date.now();
+      const deltaTime = time - this.timeSinceLastKeyPress;
+      this.timeSinceLastKeyPress = time;
+      if (deltaTime < this.comboThresholdMS || this.combos.length === 0) {
+        this.combos.push(key);
+      } else {
+        this.combos = [key];
+      }
+
+      this.lastKey = key;
+      this.keys.set(key, time);
+
+      // handle bindings
+      if (this.bindings) {
+        const bound = this.bindings.getBindingByKey(
+          Array.from(this.keys.keys()),
+        );
+        if (bound) {
+          e.preventDefault();
+          bound.onKeyDown(time);
+        }
+      }
+
+      // handle handlers
       if (this.handlers.keydown.length > 0) {
         for (const handler of this.handlers.keydown) {
           handler({ key: e.key, event: e });
@@ -148,13 +194,33 @@ export class Controller {
     });
 
     document.addEventListener('keyup', (e) => {
-      if (!this.enabled) return;
-      this.keys[e.key] = false;
+      const key = e.key;
+
+      if (this.lastKey === key) {
+        this.lastKey = Array.from(this.keys.keys()).pop() || '';
+      }
+      const entry = this.keys.get(key);
+      if (!entry) return;
+
+      // handle bindings
+      if (this.bindings) {
+        const bound = this.bindings.getBindingByKey(
+          Array.from(this.keys.keys()),
+        );
+        if (bound) {
+          e.preventDefault();
+          bound.onKeyUp(entry);
+        }
+      }
+
+      // handle handlers
       if (this.handlers.keyup.length > 0) {
         for (const handler of this.handlers.keyup) {
           handler({ key: e.key, event: e });
         }
       }
+
+      this.keys.delete(key);
     });
 
     document.addEventListener('pointerlockchange', (e: Event) => {
@@ -167,8 +233,46 @@ export class Controller {
     });
   }
 
+  public registerBindings(bindings: Bindings) {
+    if (this.bindings) return;
+    this.bindings = bindings;
+  }
+
+  public get keyList(): Array<string> {
+    return Array.from(this.keys.keys());
+  }
+
+  public get comboList(): Array<string> {
+    return this.combos;
+  }
+
+  public lastKeyPressed(): string | null {
+    if (this.lastKey === '') return null;
+    return this.lastKey;
+  }
+
   public keyIsPressed(key: string): boolean {
-    return !!this.keys[key];
+    return this.keys.has(key);
+  }
+
+  public keysArePressed(keys: string[]): boolean {
+    return keys.every((k) => this.keyIsPressed(k));
+  }
+
+  public checkCombo(combo: string[]): boolean {
+    if (this.comboExact) {
+      return this.combos.join('') === combo.join('');
+    }
+    if (this.combos.join('') === '') return false;
+    return this.combos.join('').endsWith(combo.join(''));
+  }
+
+  public checkCombos(comboList: string[][]): boolean[] {
+    return comboList.map(this.checkCombo);
+  }
+
+  public clearCombos() {
+    this.combos = [];
   }
 
   public get mouse(): vec2 {
