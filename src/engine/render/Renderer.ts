@@ -21,32 +21,6 @@ type MeshRenderCall = {
   material: Material;
 };
 
-const fragment = (id: number, frag: string) => `#version 300 es
-
-precision mediump float;
-
-in vec2 v_uv;
-uniform sampler2D u_texture;
-uniform vec2 u_screensize;
-
-layout(location=${id}) out vec4 outColor;
-
-${frag}`;
-const vertex = (code?: string) => `#version 300 es
-
-layout(location=0) in vec4 a_position;
-layout(location=1) in vec2 a_uv;
-
-out vec2 v_uv;
-
-${
-  code ??
-  `void main() {
-  gl_Position = a_position;
-  v_uv = a_uv;
-}`
-}`;
-
 export class Renderer {
   private webgl: WebGL;
   private modelUBO: UBO;
@@ -226,7 +200,8 @@ export class Renderer {
     const texId = 4 + this.postProccessStack.length;
     const step = new PostProccessStep(
       this.webgl,
-      this.webgl.createShader(name, vertex(), fragment(texId, code)),
+      texId,
+      code,
       name,
       this.size,
       texId,

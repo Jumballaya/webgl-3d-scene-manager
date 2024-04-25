@@ -20,7 +20,6 @@ import {
   ScriptSystem,
 } from '@/engine/ecs/System';
 import { Renderer } from '@/engine/render/Renderer';
-import { apply_sobel } from './sobel_effect';
 import { ScriptManager } from '@/engine/scripting/ScriptManager';
 import { LuaFactory } from 'wasmoon';
 import { ScriptData } from '@/engine/scripting/scripts.types';
@@ -83,11 +82,13 @@ export class ModelViewerCore {
 
   public play() {
     this.playing = true;
+    this.camera?.enable();
     this.controller.enable();
   }
 
   public pause() {
     this.playing = false;
+    this.camera?.disable();
     this.controller.disable();
   }
 
@@ -164,8 +165,6 @@ export class ModelViewerCore {
     gBufferShader.bind();
     gBufferShader.uniform('u_texture_albedo', { type: 'texture', value: 16 });
     gBufferShader.unbind();
-
-    apply_sobel(renderer);
 
     this.webgl = webgl;
     this.camera = camera;
@@ -451,8 +450,19 @@ export class ModelViewerCore {
     return material;
   }
 
+  public addScript(name: string, text: string) {
+    if (this.scriptManager) {
+      this.scriptManager.addScript(name, text);
+      this.entityStore?.setScriptList(this.scriptManager.scriptList());
+    }
+  }
+
   public getScript(name: string) {
     return this.scriptManager?.getScript(name) ?? null;
+  }
+
+  public addPostEffects(name: string) {
+    this.renderer?.createPostProcessStep(name, '', '');
   }
 
   public getPostEffects(): PostProccessStep[] {

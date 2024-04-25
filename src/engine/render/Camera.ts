@@ -12,6 +12,8 @@ export class Camera {
 
   private screenDims: vec2;
 
+  private enabled = false;
+
   constructor(
     webgl: WebGL,
     fov: number,
@@ -38,6 +40,14 @@ export class Camera {
     this.cameraUBO.unbind();
   }
 
+  public enable() {
+    this.enabled = true;
+  }
+
+  public disable() {
+    this.enabled = false;
+  }
+
   public setupUBO(shaders: Shader[]) {
     this.cameraUBO.bind();
     for (const shader of shaders) {
@@ -47,6 +57,7 @@ export class Camera {
   }
 
   public update() {
+    if (!this.enabled) return;
     this.input.update();
     this.cameraUBO.bind();
     this.cameraUBO.set('projection', this.projMatrix);
