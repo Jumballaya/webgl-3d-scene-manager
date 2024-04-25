@@ -54,6 +54,7 @@ export class ModelViewerCore {
   public entityStore?: EntityStoreState;
 
   public initialized = false;
+  private playing = false;
 
   public element: HTMLCanvasElement;
 
@@ -74,6 +75,20 @@ export class ModelViewerCore {
     this.element = document.createElement('canvas');
     this.element.width = 800;
     this.element.height = 600;
+  }
+
+  public get isPlaying() {
+    return this.playing;
+  }
+
+  public play() {
+    this.playing = true;
+    this.controller.enable();
+  }
+
+  public pause() {
+    this.playing = false;
+    this.controller.disable();
   }
 
   public set darkMode(darkMode: boolean) {
@@ -180,7 +195,9 @@ export class ModelViewerCore {
   public render() {
     this.ecs.runSystem('Lights');
     this.ecs.runSystem('Render');
-    this.ecs.runSystem('Script');
+    if (this.playing) {
+      this.ecs.runSystem('Script');
+    }
   }
 
   // Entity API
@@ -358,10 +375,11 @@ export class ModelViewerCore {
   }
 
   private addMesh(entity: Entity) {
-    const cube = this.assetManager?.getMesh('cube');
-    if (cube) {
-      this.ecs.addComponentToEntity(entity, 'Mesh', cube.clone());
-    }
+    this.ecs.addComponentToEntity(
+      entity,
+      'Mesh',
+      new Mesh(`mesh-${crypto.randomUUID()}`),
+    );
     this.ecs.addComponentToEntity(entity, 'Transform', new Transform());
   }
 

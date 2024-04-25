@@ -1,4 +1,4 @@
-import { vec2 } from "gl-matrix";
+import { vec2 } from 'gl-matrix';
 
 type ControllerMouseMoveEvent = {
   previousPosition: vec2;
@@ -66,6 +66,8 @@ export class Controller {
   private curMousePosition: vec2 = [0, 0];
   private prevMousePosition: vec2 | null = null;
 
+  protected enabled = false;
+
   public addEventListener<T extends ControllerEventName>(
     event: T,
     handler: ControllerEvents[T],
@@ -75,7 +77,7 @@ export class Controller {
   }
 
   public requestPointerLock() {
-    this.canvas?.addEventListener("click", () => {
+    this.canvas?.addEventListener('click', () => {
       this.canvas?.requestPointerLock();
     });
   }
@@ -86,7 +88,8 @@ export class Controller {
 
   public registerForCanvas(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    canvas.addEventListener("mousemove", (evt) => {
+    canvas.addEventListener('mousemove', (evt) => {
+      if (!this.enabled) return;
       evt.preventDefault();
       const rect = canvas.getBoundingClientRect();
       this.curMousePosition[0] = evt.clientX - rect.left;
@@ -109,7 +112,8 @@ export class Controller {
       this.prevMousePosition[1] = this.curMousePosition[1];
     });
 
-    canvas.addEventListener("mousedown", (evt) => {
+    canvas.addEventListener('mousedown', (evt) => {
+      if (!this.enabled) return;
       const rect = canvas.getBoundingClientRect();
       const curMouse: vec2 = [evt.clientX - rect.left, evt.clientY - rect.top];
       if (this.handlers.click.length > 0) {
@@ -119,7 +123,8 @@ export class Controller {
       }
     });
 
-    canvas.addEventListener("wheel", (evt) => {
+    canvas.addEventListener('wheel', (evt) => {
+      if (!this.enabled) return;
       evt.preventDefault();
       if (this.handlers.wheel.length > 0) {
         for (const handler of this.handlers.wheel) {
@@ -132,7 +137,8 @@ export class Controller {
       evt.preventDefault();
     };
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener('keydown', (e) => {
+      if (!this.enabled) return;
       this.keys[e.key] = true;
       if (this.handlers.keydown.length > 0) {
         for (const handler of this.handlers.keydown) {
@@ -141,7 +147,8 @@ export class Controller {
       }
     });
 
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener('keyup', (e) => {
+      if (!this.enabled) return;
       this.keys[e.key] = false;
       if (this.handlers.keyup.length > 0) {
         for (const handler of this.handlers.keyup) {
@@ -150,7 +157,8 @@ export class Controller {
       }
     });
 
-    document.addEventListener("pointerlockchange", (e: Event) => {
+    document.addEventListener('pointerlockchange', (e: Event) => {
+      if (!this.enabled) return;
       if (this.handlers.pointerlockchange.length > 0 && this.canvas) {
         for (const handler of this.handlers.pointerlockchange) {
           handler({ canvas: this.canvas, event: e });
@@ -172,5 +180,13 @@ export class Controller {
       this.curMousePosition[0] - (this.prevMousePosition?.[0] || 0),
       this.curMousePosition[1] - (this.prevMousePosition?.[1] || 0),
     ];
+  }
+
+  public disable() {
+    this.enabled = false;
+  }
+
+  public enable() {
+    this.enabled = true;
   }
 }

@@ -33,4 +33,12 @@ export function setup_lua_entity_components(lua: LuaEngine, ecs: ECS) {
       return meshComp.data.geometry;
     }
   });
+
+  lua.global.set('spawn_prefab', (name: string) => {
+    return ecs.createPrefab(name);
+  });
+
+  lua.global.set('delete_entity', (entity: Entity) => {
+    return ecs.deleteEntity(entity.id);
+  });
 }

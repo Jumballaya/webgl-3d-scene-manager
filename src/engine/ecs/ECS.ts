@@ -90,7 +90,6 @@ export class ECS {
 
   public createPrefab(name: string) {
     const prefab = this.prefabs.get(name);
-    console.log(prefab);
     if (prefab) {
       const ent = prefab.create();
       this.entities.push(ent);

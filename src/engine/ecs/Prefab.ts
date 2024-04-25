@@ -37,6 +37,8 @@ export class Prefab {
       if (component) {
         if (isClonable(component.data)) {
           data.components.push([compName, component.data.clone()]);
+        } else if (typeof component.data === 'object') {
+          data.components.push([compName, { ...component.data }]);
         } else {
           data.components.push([compName, component.data]);
         }
