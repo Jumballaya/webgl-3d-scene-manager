@@ -33,7 +33,7 @@ export function EditMenuItem() {
                 mvc.setCurrentlySelected(ent);
               }}
             >
-              Blank Entity
+              Blank Entity <MenubarShortcut>Alt+E</MenubarShortcut>
             </MenubarItem>
             <MenubarItem
               onClick={() => {
@@ -41,7 +41,8 @@ export function EditMenuItem() {
                 mvc.setCurrentlySelected(ent);
               }}
             >
-              Mesh Entity
+              Mesh Entity{' '}
+              <MenubarShortcut className="ml-3">Alt+M</MenubarShortcut>
             </MenubarItem>
             <MenubarItem
               onClick={() => {
@@ -49,21 +50,21 @@ export function EditMenuItem() {
                 mvc.setCurrentlySelected(ent);
               }}
             >
-              Light Entity
+              Light Entity <MenubarShortcut>Alt+L</MenubarShortcut>
             </MenubarItem>
             <MenubarItem
               onClick={() => {
                 mvc.addScript(`lua-script-${crypto.randomUUID()}`, '');
               }}
             >
-              Lua Script
+              Lua Script <MenubarShortcut>Alt+S</MenubarShortcut>
             </MenubarItem>
             <MenubarItem
               onClick={() => {
                 mvc.addPostEffects(`post-effect-${crypto.randomUUID()}`);
               }}
             >
-              Post Effect
+              Post Effect <MenubarShortcut>Alt+P</MenubarShortcut>
             </MenubarItem>
           </MenubarSubContent>
         </MenubarSub>

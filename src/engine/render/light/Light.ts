@@ -19,7 +19,7 @@ export class Light {
   }
 
   public get position(): vec3 {
-    return this._position;
+    return [this._position[0], this._position[1], this._position[2]];
   }
 
   public set position(p: vec3) {
@@ -30,9 +30,10 @@ export class Light {
   }
 
   public clone(): Light {
-    const light = new Light(this.manager, this.type, this.webgl);
-    light._position = this._position;
+    const light = this.manager.createLight(this.type);
+    light._position = this.position;
     light.active = this.active;
+    this.manager.updateLight(light);
     return light;
   }
 }

@@ -39,4 +39,13 @@ export class SpotLight extends Light {
     this._innerAngle = a;
     this.manager.updateLight(this);
   }
+
+  public clone(): Light {
+    const light = super.clone() as SpotLight;
+    light._direction = this.position;
+    light._innerAngle = this.innerAngle;
+    light._outerAngle = this.outerAngle;
+    this.manager.updateLight(light);
+    return light;
+  }
 }
