@@ -53,7 +53,12 @@ export class LitMaterial extends Material {
   }
 
   public clone() {
-    return new LitMaterial(this.assetManager, this.shader, this.config);
+    return new LitMaterial(
+      this.assetManager,
+      this.shader,
+      this.name,
+      this.config,
+    );
   }
 
   public bindUbo(ubo: UBO) {

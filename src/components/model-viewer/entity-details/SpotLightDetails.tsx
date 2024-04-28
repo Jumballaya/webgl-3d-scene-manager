@@ -1,8 +1,6 @@
-import { Label } from '@/shadcn/ui/label';
 import { Button } from '@/shadcn/ui/button';
 import { SpotLight } from '@/engine/render/light/SpotLight';
 import { useState } from 'react';
-import { FormItem } from '@/shadcn/ui/form';
 import { Input } from '@/shadcn/ui/input';
 import { EntityComponentVec3Field } from './component-details/EntityComponentVec3Field';
 

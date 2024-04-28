@@ -53,7 +53,12 @@ export class PhongMaterial extends Material {
   }
 
   public clone() {
-    return new PhongMaterial(this.assetManager, this.shader, this.config);
+    return new PhongMaterial(
+      this.assetManager,
+      this.shader,
+      this.name,
+      this.config,
+    );
   }
 
   public bindUbo(ubo: UBO) {

@@ -1,9 +1,9 @@
 import { EntityComponentField } from './EntityComponentField';
-import type { NumbertDetailProps } from './component-details.types';
+import type { NumberDetailProps } from './component-details.types';
 
 export function EntityComponentVec3Field(props: {
   label: string;
-  vec3: [NumbertDetailProps, NumbertDetailProps, NumbertDetailProps];
+  vec3: [NumberDetailProps, NumberDetailProps, NumberDetailProps];
 }) {
   return (
     <div>
