@@ -38,6 +38,10 @@ export class LightManager {
     this.ubo = this.webgl.createUBO('Lighting', this.data);
   }
 
+  public getLights() {
+    return [...this.lights.pointLight, ...this.lights.spotLight];
+  }
+
   public bindBuffer() {
     this.ubo.bind();
   }
