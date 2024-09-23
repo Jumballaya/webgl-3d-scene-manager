@@ -1,7 +1,7 @@
 import { ResizablePanel } from '@/shadcn/ui/resizable';
 import EntityList from './entity-list/EntityList';
 import { AssetViewer } from './asset-viewer/AssetViewer';
-import { EditorTabName, useEditorStore } from '@/store/editorStore';
+import { EditorTabName } from '@/store/editorStore';
 import { TextFileViewer } from './text-editor/TextFileViewer';
 import { Separator } from '@/shadcn/ui/separator';
 import { ScrollArea } from '@/shadcn/ui/scroll-area';
@@ -27,14 +27,19 @@ const titles: Record<EditorTabName, string> = {
 };
 
 export default function LeftSideBar() {
-  const { currentTab } = useEditorStore();
+  const currentTab = '3d-viewer';
   const LeftSideBarElement = elements[currentTab];
   const title = titles[currentTab];
+  const pixelPercent = 100 / window.innerWidth;
   return (
-    <ResizablePanel minSize={10} maxSize={18} defaultSize={12}>
+    <ResizablePanel
+      minSize={200 * pixelPercent}
+      maxSize={300 * pixelPercent}
+      defaultSize={200 * pixelPercent}
+    >
       <h2 className="py-4 px-4 font-bold">{title}</h2>
       <Separator />
-      <ScrollArea style={{ height: '100%' }}>
+      <ScrollArea>
         <LeftSideBarElement />
       </ScrollArea>
     </ResizablePanel>

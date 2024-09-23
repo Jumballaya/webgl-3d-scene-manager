@@ -7,7 +7,7 @@ import RightSidebar from './model-viewer/right-sidebar';
 export function ModelViewer() {
   return (
     <TooltipProvider delayDuration={0}>
-      <ResizablePanelGroup direction="horizontal" className="items-stretch">
+      <ResizablePanelGroup direction="horizontal">
         <LeftSideBar />
         <ResizableHandle withHandle />
         <MiddleSection />

@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 
+// @TODO:
+//
+//   Pass screen size down for resizing re-renders
+//   This store should control everything about the UI
+//
+//
+
 export type EditorTabName = '3d-viewer' | 'text-editor';
 
 export type EditorStoreState = {

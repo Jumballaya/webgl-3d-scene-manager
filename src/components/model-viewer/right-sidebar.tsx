@@ -7,7 +7,7 @@ import { EngineDetails } from './engine-details/EngineDetails';
 export default function RightSidebar() {
   return (
     <ResizablePanel minSize={12} maxSize={26} defaultSize={18}>
-      <Tabs defaultValue="viewer" style={{ height: '100%' }}>
+      <Tabs defaultValue="viewer" className="h-full">
         <div className="flex px-4 py-2">
           <TabsList className="ml-auto">
             <TabsTrigger

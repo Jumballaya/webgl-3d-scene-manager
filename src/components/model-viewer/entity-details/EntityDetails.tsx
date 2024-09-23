@@ -9,7 +9,7 @@ import MeshDetails from './MeshDetails';
 export default function EntityDetails() {
   return (
     <ScrollArea className="h-90 w-full">
-      <div className="p-2 w-full h-full">
+      <div className="w-full h-full">
         <EntityActions />
         <NameDetails />
         <TransformDetails />

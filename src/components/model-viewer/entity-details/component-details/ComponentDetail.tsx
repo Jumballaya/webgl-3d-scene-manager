@@ -17,7 +17,7 @@ export function ComponentDetail(props: ComponentDetailProps) {
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
-        <AccordionTrigger className="px-3">
+        <AccordionTrigger className="px-3 py-2">
           <span className="flex flex-row items-center">
             {props.onDestroy ? (
               <div

@@ -31,8 +31,8 @@ export function AssetTypeSelector(props: {
   }
 
   return (
-    <div className="flex flex-row p-3">
-      <h3 className="self-center mr-2 font-bold">Type</h3>
+    <div className="flex flex-row p-2">
+      <h4 className="self-center mr-1 w-1/2">Asset Type</h4>
       <Select
         onValueChange={(type) => {
           if (assetManager) {
@@ -67,8 +67,8 @@ export function AssetTypeSelector(props: {
         }}
         value={currentType}
       >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a mesh" />
+        <SelectTrigger className="w-1/2 py-1 pt-0 h-auto px-2 items-end">
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

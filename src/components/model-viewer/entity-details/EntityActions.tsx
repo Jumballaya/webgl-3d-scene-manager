@@ -1,4 +1,3 @@
-import { Button } from '@/shadcn/ui/button';
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { useEntityStore } from '@/store/entityStore';
 import {
@@ -13,6 +12,8 @@ import { useEffect, useState } from 'react';
 import { Transform } from '@/engine/math/Transform';
 import { Separator } from '@/shadcn/ui/separator';
 import { Prefab } from '@/engine/ecs/Prefab';
+import { BookCopy, Trash2, UserPlus } from 'lucide-react';
+import { ActionBar, ActionBarProps } from '@/components/ActionBar';
 
 export function EntityActions() {
   const mvc = useModelViewerCore();
@@ -38,71 +39,61 @@ export function EntityActions() {
     return <></>;
   }
 
+  const entries: ActionBarProps['entries'] = [
+    {
+      variant: 'ghost',
+      onClick: () => {
+        const ent = mvc.getCurrentlySelected();
+        if (ent) {
+          const child = mvc.addEntity();
+          mvc.addChildToEntity(ent, child);
+        }
+      },
+      icon: UserPlus,
+      tooltip: 'Add Child',
+    },
+    {
+      variant: 'ghost',
+      onClick: () => {
+        const ent = mvc.getCurrentlySelected();
+        if (ent) {
+          const clone = mvc.cloneEntity(ent);
+          mvc.setCurrentlySelected(clone);
+        }
+      },
+      icon: BookCopy,
+      tooltip: 'Clone',
+    },
+    {
+      variant: 'ghost',
+      onClick: () => {
+        const entity = mvc.getCurrentlySelected();
+        if (entity) {
+          const prefab = Prefab.FromEntity(entity, mvc.ecs);
+          mvc.registerPrefab(prefab);
+        }
+      },
+      icon: BookCopy,
+      tooltip: 'Generate Prefab',
+    },
+    {
+      variant: 'destructive',
+      onClick: () => {
+        const entity = mvc.getCurrentlySelected();
+        if (entity) {
+          mvc.deleteEntity(currentlySelected.id);
+        }
+      },
+      icon: Trash2,
+      tooltip: 'Delete Entity',
+    },
+  ];
+
   return (
-    <div>
-      <div className="px-2 mb-9">
-        <div className="flex flex-row flex-wrap pb-4">
-          <Button
-            size="sm"
-            className="mr-2 mt-2 p-2"
-            onClick={(e) => {
-              e.preventDefault();
-              const ent = mvc.getCurrentlySelected();
-              if (ent) {
-                const child = mvc.addEntity();
-                mvc.addChildToEntity(ent, child);
-              }
-            }}
-            id="create-child"
-          >
-            Add Child
-          </Button>
-          <Button
-            size="sm"
-            className="mr-2 mt-2 p-2"
-            onClick={(e) => {
-              e.preventDefault();
-              const ent = mvc.getCurrentlySelected();
-              if (ent) {
-                const clone = mvc.cloneEntity(ent);
-                mvc.setCurrentlySelected(clone);
-              }
-            }}
-            id="clone-entity"
-            variant={'secondary'}
-          >
-            Clone
-          </Button>
-          <Button
-            size="sm"
-            className="mr-2 mt-2 p-2"
-            onClick={(e) => {
-              e.preventDefault();
-              const entity = mvc.getCurrentlySelected();
-              if (entity) {
-                const prefab = Prefab.FromEntity(entity, mvc.ecs);
-                mvc.registerPrefab(prefab);
-              }
-            }}
-            id="create-prefab"
-            variant={'secondary'}
-          >
-            Generate Prefab
-          </Button>
-          <Button
-            size="sm"
-            className="mt-2 p-2"
-            onClick={(e) => {
-              e.preventDefault();
-              e.preventDefault();
-              mvc.deleteEntity(currentlySelected.id);
-            }}
-            id="delete-entity"
-            variant={'destructive'}
-          >
-            Delete
-          </Button>
-        </div>
+    <>
+      <ActionBar name="entity_details" entries={entries} />
+      <Separator className="mb-4" />
+      <div className="px-2">
         <Select
           disabled={componentList.length === 0}
           onValueChange={(componentName) => {
@@ -140,13 +131,13 @@ export function EntityActions() {
           }}
           value={''}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full mb-4 h-auto px-2 py-1">
             <SelectValue placeholder="Add a Component" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {(componentList ?? []).map((m) => (
-                <SelectItem key={m} value={m}>
+                <SelectItem key={m} value={m} className="h-auto px-2 py-1">
                   {m}
                 </SelectItem>
               ))}
@@ -155,6 +146,6 @@ export function EntityActions() {
         </Select>
       </div>
       <Separator />
-    </div>
+    </>
   );
 }

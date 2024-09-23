@@ -212,7 +212,9 @@ function TransformDetails() {
         />
 
         <div className="flex flex-row">
-          <Button id="submit-update-transform">Update Transform</Button>
+          <Button id="submit-update-transform" className="px-2 py-1 h-auto">
+            Update Transform
+          </Button>
         </div>
       </form>
     </ComponentDetail>

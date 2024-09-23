@@ -17,7 +17,7 @@ export function EntityComponentField(props: InputProps) {
       <Input
         type={props.type}
         id={props.id}
-        className="h-8 px-1"
+        className="px-1 h-auto py-0"
         value={props.startingValue}
         step={props.type === 'number' ? props.step : undefined}
         min={props.type === 'number' ? props.min : undefined}

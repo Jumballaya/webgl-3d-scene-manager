@@ -6,6 +6,9 @@ import { AssetTypeSelector } from './AssetTypeSelector';
 import { FileUploader } from './FileUploader';
 import { AssetDetails } from './AssetDetails';
 import { useEntityStore } from '@/store/entityStore';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
+import { Button } from '@/shadcn/ui/button';
+import { File, Plus, Trash2 } from 'lucide-react';
 
 const types = [
   'none',
@@ -16,8 +19,114 @@ const types = [
   'prefabs',
 ];
 
+const singularForm: Record<string, string> = {
+  geometries: 'geometry',
+  materials: 'material',
+  textures: 'texture',
+  scripts: 'script',
+  prefabs: 'prefab',
+};
+
+function formatAssetTypeName(name: string): string {
+  const singular = singularForm[name] || ' ';
+  return `${singular[0].toUpperCase()}${singular.slice(1)}`;
+}
+
+/* <FileUploader
+onUpload={() => {
+  if (mvc.assetManager) {
+    switch (currentType) {
+      case 'geometries': {
+        setAssetList(mvc.assetManager.geometryList);
+        break;
+      }
+      case 'materials': {
+        setAssetList(mvc.assetManager.materialList);
+        break;
+      }
+      case 'textures': {
+        setAssetList(mvc.assetManager.textureList);
+        break;
+      }
+      case 'scripts': {
+        setAssetList(mvc.assetManager.scriptList);
+        break;
+      }
+      default: {
+        setAssetList([]);
+        break;
+      }
+    }
+  }
+}}
+/> */
+
+function AssetCommands(props: { currentType: string }) {
+  return (
+    <>
+      <section className="flex-row">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Create {props.currentType}</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Create {formatAssetTypeName(props.currentType)}
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">
+                Delete Selected {formatAssetTypeName(props.currentType)}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Delete Selected {formatAssetTypeName(props.currentType)}
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              <File className="h-4 w-4" />
+              <span className="sr-only">
+                Upload {formatAssetTypeName(props.currentType)}
+              </span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Upload {formatAssetTypeName(props.currentType)}
+          </TooltipContent>
+        </Tooltip>
+      </section>
+      <Separator />
+    </>
+  );
+}
+
 export function AssetViewer() {
-  const mvc = useModelViewerCore();
   const { geometryList, materialList, textureList, scriptList, prefabList } =
     useEntityStore();
   const [currentType, setCurrentType] = useState<string>('none');
@@ -62,8 +171,6 @@ export function AssetViewer() {
 
   return (
     <section>
-      <h2 className="py-4 px-4 font-bold">Asset Manager</h2>
-      <Separator />
       <AssetTypeSelector
         currentType={currentType}
         types={types}
@@ -78,37 +185,11 @@ export function AssetViewer() {
         onSelect={(item) => setSelected(item)}
       />
       <Separator />
-      <section className="p-2 px-3">
-        <FileUploader
-          onUpload={() => {
-            if (mvc.assetManager) {
-              switch (currentType) {
-                case 'geometries': {
-                  setAssetList(mvc.assetManager.geometryList);
-                  break;
-                }
-                case 'materials': {
-                  setAssetList(mvc.assetManager.materialList);
-                  break;
-                }
-                case 'textures': {
-                  setAssetList(mvc.assetManager.textureList);
-                  break;
-                }
-                case 'scripts': {
-                  setAssetList(mvc.assetManager.scriptList);
-                  break;
-                }
-                default: {
-                  setAssetList([]);
-                  break;
-                }
-              }
-            }
-          }}
-        />
-      </section>
-      <Separator />
+      {currentType !== 'none' ? (
+        <AssetCommands currentType={currentType} />
+      ) : (
+        <></>
+      )}
       <AssetDetails selected={selected || ''} currentType={currentType} />
     </section>
   );
