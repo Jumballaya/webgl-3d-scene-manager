@@ -60,6 +60,7 @@ function TransformDetails() {
       }}
     >
       <form
+        className="px-2"
         name="transform-details"
         id="transform-details"
         onSubmit={(e) => {

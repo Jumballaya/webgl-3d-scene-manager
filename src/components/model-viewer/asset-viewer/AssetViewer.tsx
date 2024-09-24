@@ -1,14 +1,12 @@
 import { Separator } from '@/shadcn/ui/separator';
 import { useEffect, useState } from 'react';
-import useModelViewerCore from '@/core/useModelViewerCore';
 import { AssetList } from './AssetList';
 import { AssetTypeSelector } from './AssetTypeSelector';
-import { FileUploader } from './FileUploader';
 import { AssetDetails } from './AssetDetails';
 import { useEntityStore } from '@/store/entityStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
 import { Button } from '@/shadcn/ui/button';
-import { File, Plus, Trash2 } from 'lucide-react';
+import { File, FilePlus2Icon, Trash2 } from 'lucide-react';
 
 const types = [
   'none',
@@ -74,7 +72,7 @@ function AssetCommands(props: { currentType: string }) {
               variant="ghost"
               size="icon"
             >
-              <Plus className="h-4 w-4" />
+              <FilePlus2Icon className="h-4 w-4" />
               <span className="sr-only">Create {props.currentType}</span>
             </Button>
           </TooltipTrigger>

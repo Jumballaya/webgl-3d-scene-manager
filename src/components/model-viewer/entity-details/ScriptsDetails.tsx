@@ -1,20 +1,13 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { ScriptData } from '@/engine/scripting/scripts.types';
 import { Button } from '@/shadcn/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shadcn/ui/select';
 import { useEditorStore } from '@/store/editorStore';
 import { useEntityStore } from '@/store/entityStore';
-import { CodeIcon } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ComponentDetail } from './component-details/ComponentDetail';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
+import { DropdownSelect } from '@/components/DropdownSelect';
 
 const defaultScript: ScriptData = {
   update: 'none',
@@ -53,31 +46,21 @@ export function ScriptsDetails() {
     >
       <div className="flex flex-row items-center">
         <h3 className="mr-2 text-lg">Update</h3>
-        <Select
+        <DropdownSelect
+          name="entity_details_script"
           onValueChange={(update) => {
             // update which script is used
             setScripts({ ...scripts, update });
             mvc.setScriptOnCurrentlySelected('update', update);
           }}
-          value={scripts.update}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a script" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {scriptList.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          value={scripts.update ?? 'none'}
+          options={scriptList}
+          placeholder="Select a Script"
+        />
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="p-2 ml-2"
+              className="p-1 ml-2 h-auto"
               onClick={(e) => {
                 e.preventDefault();
                 if (scripts.update && scripts.update !== 'none') {
@@ -87,7 +70,7 @@ export function ScriptsDetails() {
                 }
               }}
             >
-              <CodeIcon size={16} />
+              <Pencil size={16} />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Edit Script</TooltipContent>
