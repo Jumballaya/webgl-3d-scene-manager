@@ -17,6 +17,7 @@ function NameDetails() {
       <Input
         type="text"
         id="rotation-x"
+        className="m-0 px-2 py-1 h-auto"
         value={(nameComp[1] as string) || ''}
         onChange={(e) => {
           mvc.updateComponentOnCurrentlySelected('Name', e.target.value);

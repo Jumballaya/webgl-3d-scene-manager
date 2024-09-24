@@ -39,7 +39,7 @@ export function ComponentDetail(props: ComponentDetailProps) {
             {props.title}
           </span>
         </AccordionTrigger>
-        <AccordionContent className="px-2 pt-2">
+        <AccordionContent className="px-4 pt-2">
           {props.children}
         </AccordionContent>
       </AccordionItem>

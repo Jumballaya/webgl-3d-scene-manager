@@ -2,17 +2,10 @@ import useModelViewerCore from '@/core/useModelViewerCore';
 import { PointLight } from '@/engine/render/light/PointLight';
 import { SpotLight } from '@/engine/render/light/SpotLight';
 import { Light } from '@/engine/render/light/Light';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shadcn/ui/select';
 import { useState } from 'react';
 import { SpotLightDetails } from './SpotLightDetails';
 import { ComponentDetail } from './component-details/ComponentDetail';
+import { DropdownSelect } from '@/components/DropdownSelect';
 
 function getLightDetailsComponent(light: Light) {
   if (light instanceof PointLight) {
@@ -42,7 +35,9 @@ export function LightDetails() {
       }}
       title="Light"
     >
-      <Select
+      <h3 className="mb-1">Light Type</h3>
+      <DropdownSelect
+        name="entity_details_light_type"
         onValueChange={(type) => {
           if (type === 'point') {
             mvc.removeLight(lightComp.data);
@@ -62,17 +57,12 @@ export function LightDetails() {
           }
         }}
         value={lightType}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a material" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="point">Point Light</SelectItem>
-            <SelectItem value="spot">Spot Light</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        options={[
+          { value: 'point', display: 'Point Light' },
+          { value: 'spot', display: 'Spot Light' },
+        ]}
+        placeholder="Select a Geometry"
+      />
       {getLightDetailsComponent(lightComp.data)}
     </ComponentDetail>
   );

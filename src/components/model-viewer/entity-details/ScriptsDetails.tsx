@@ -22,6 +22,12 @@ export function ScriptsDetails() {
   )[0] as [string, ScriptData] | undefined;
   const scriptData = scriptsComp?.[1];
   const [scripts, setScripts] = useState<ScriptData>(defaultScript);
+  const [sList, setScriptList] = useState<{ value: string; display: string }[]>(
+    [],
+  );
+  useEffect(() => {
+    setScriptList((scriptList ?? []).map((m) => ({ value: m, display: m })));
+  }, [scriptList]);
 
   // runs when currentlySelected changes
   useEffect(() => {
@@ -54,7 +60,7 @@ export function ScriptsDetails() {
             mvc.setScriptOnCurrentlySelected('update', update);
           }}
           value={scripts.update ?? 'none'}
-          options={scriptList}
+          options={sList}
           placeholder="Select a Script"
         />
         <Tooltip>

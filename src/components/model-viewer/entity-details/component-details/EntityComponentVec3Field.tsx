@@ -7,8 +7,8 @@ export function EntityComponentVec3Field(props: {
 }) {
   return (
     <div>
-      <h3 className="text-md mb-1">{props.label}</h3>
-      <section className="flex flex-row justify-between mb-5">
+      <h3 className="text-md m-0 mb-1 p-0 h-auto">{props.label}</h3>
+      <section className="flex flex-row justify-between mb-3">
         {props.vec3.map((input) => (
           <EntityComponentField
             key={input.id}

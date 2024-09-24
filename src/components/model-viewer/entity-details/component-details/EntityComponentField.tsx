@@ -8,16 +8,15 @@ export function EntityComponentField(props: InputProps) {
     return null;
   }
   return (
-    <FormItem
-      className={`flex flex-row items-baseline mr-2 ${props.className}`}
-    >
-      <Label htmlFor={props.id} className="mr-2">
+    <FormItem className={`flex flex-row items-baseline ${props.className}`}>
+      <Label htmlFor={props.id} className="bg-primary p-1">
         {props.label}
       </Label>
       <Input
         type={props.type}
         id={props.id}
-        className="px-1 h-auto py-0"
+        className="px-1 h-auto py-0 rounded-none"
+        style={{ marginTop: '0' }}
         value={props.startingValue}
         step={props.type === 'number' ? props.step : undefined}
         min={props.type === 'number' ? props.min : undefined}

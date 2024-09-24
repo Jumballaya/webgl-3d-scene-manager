@@ -60,7 +60,6 @@ function TransformDetails() {
       }}
     >
       <form
-        className="px-2"
         name="transform-details"
         id="transform-details"
         onSubmit={(e) => {
@@ -212,11 +211,9 @@ function TransformDetails() {
           ]}
         />
 
-        <div className="flex flex-row">
-          <Button id="submit-update-transform" className="px-2 py-1 h-auto">
-            Update Transform
-          </Button>
-        </div>
+        <Button id="submit-update-transform" className="px-2 py-1 h-auto">
+          Update Transform
+        </Button>
       </form>
     </ComponentDetail>
   );

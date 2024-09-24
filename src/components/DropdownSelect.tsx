@@ -11,7 +11,7 @@ type DropdownSelectProps = {
   name: string;
   onValueChange: (value: string) => void;
   value: string;
-  options: string[];
+  options: Array<{ value: string; display: string }>;
   placeholder: string;
 };
 
@@ -26,10 +26,12 @@ export function DropdownSelect(props: DropdownSelectProps) {
           {props.options.map((opt) => (
             <SelectItem
               key={`${props.name}_dropdown_select_${opt}`}
-              value={opt}
+              value={opt.value}
               className="flex flex-row h-auto py-1 flex-end"
             >
-              {opt.length > 30 ? `${opt.slice(0, 27)}...` : opt}
+              {opt.display.length > 30
+                ? `${opt.display.slice(0, 27)}...`
+                : opt.display}
             </SelectItem>
           ))}
         </SelectGroup>

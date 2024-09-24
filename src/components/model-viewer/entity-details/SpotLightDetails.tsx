@@ -65,12 +65,12 @@ export function SpotLightDetails(props: { light: SpotLight }) {
           ]}
         />
 
-        <h3 className="text-md mb-3">Inner Angle</h3>
-        <section className="flex mb-5">
+        <h3 className="text-md mb-1">Inner Angle</h3>
+        <section className="flex mb-4">
           <Input
             type="number"
             id="light-inner-angle"
-            className="px-1 block w-full"
+            className="px-2 py-1 w-full h-auto"
             value={values.innerAngle}
             step={Math.PI / 90}
             min={0.0}
@@ -85,12 +85,12 @@ export function SpotLightDetails(props: { light: SpotLight }) {
           />
         </section>
 
-        <h3 className="text-md mb-3">Outer Angle</h3>
-        <section className="flex mb-5">
+        <h3 className="text-md mb-1">Outer Angle</h3>
+        <section className="flex mb-4">
           <Input
             type="number"
             id="light-outer-angle"
-            className="px-1 block w-full"
+            className="px-2 py-1 w-full h-auto"
             value={values.outerAngle}
             step={Math.PI / 90}
             min={0}
@@ -104,7 +104,7 @@ export function SpotLightDetails(props: { light: SpotLight }) {
             }}
           />
         </section>
-        <Button>Update Spotlight</Button>
+        <Button className="px-2 py-1 h-auto">Update Spotlight</Button>
       </form>
     </div>
   );
