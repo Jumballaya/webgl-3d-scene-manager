@@ -5,11 +5,12 @@ import { ThemeProvider } from './core/theme';
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <main className="h-screen border rounded">
+      <main
+        className="border h-screen flex flex-col w-100"
+        style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+      >
         <MenuBar />
-        <div className="flex-col md:flex h-full">
-          <ModelViewer />
-        </div>
+        <ModelViewer />
       </main>
     </ThemeProvider>
   );

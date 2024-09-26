@@ -17,42 +17,38 @@ export default function RightSidebar() {
 
   return (
     <ResizablePanel
-      minSize={12}
+      minSize={17}
       maxSize={26}
       defaultSize={18}
-      className="h-full"
+      className="flex flex-col"
     >
-      <Tabs defaultValue="viewer" className="h-full">
-        <div className="flex px-4 py-2">
-          <TabsList className="ml-auto">
-            <TabsTrigger
-              value="viewer"
-              className="text-zinc-600 dark:text-zinc-200"
-            >
-              {tabName}
-            </TabsTrigger>
-            <TabsTrigger
-              value="editor"
-              className="text-zinc-600 dark:text-zinc-200"
-            >
-              Engine Options
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        <Separator />
-        <ScrollArea className="w-full" style={{ height: '89.5%' }}>
-          <TabsContent value="viewer" className="m-0">
-            <div className="w-100 flex flex-col items-center justify-center">
-              <Details />
-            </div>
+      <ScrollArea className="w-full h-full">
+        <Tabs defaultValue="details">
+          <div className="flex">
+            <TabsList className="mr-auto rounded-none">
+              <TabsTrigger
+                value="details"
+                className="text-zinc-600 dark:text-zinc-200"
+              >
+                {tabName}
+              </TabsTrigger>
+              <TabsTrigger
+                value="options"
+                className="text-zinc-600 dark:text-zinc-200"
+              >
+                Engine Options
+              </TabsTrigger>
+            </TabsList>
+          </div>
+          <Separator />
+          <TabsContent value="details" className="m-0">
+            <Details />
           </TabsContent>
-          <TabsContent value="editor" className="m-0">
-            <div className="flex items-center">
-              <EngineDetails />
-            </div>
+          <TabsContent value="options" className="m-0">
+            <EngineDetails />
           </TabsContent>
-        </ScrollArea>
-      </Tabs>
+        </Tabs>
+      </ScrollArea>
     </ResizablePanel>
   );
 }

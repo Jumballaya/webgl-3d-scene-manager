@@ -22,29 +22,9 @@ export default function MiddleSection() {
   return (
     <ResizablePanel minSize={30} className="">
       <Tabs value={currentTab} style={{ height: '100%' }}>
-        <div className="flex items-center justify-center px-4 py-2">
-          <div className="mr-auto basis-full"></div>
-          <div className="basis-full flex justify-evenly">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    if (isPlaying) mvc.pause();
-                    else mvc.play();
-                    setIsPlaying(mvc.isPlaying);
-                  }}
-                >
-                  {isPlaying ? <PauseIcon /> : <PlayIcon />}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {isPlaying ? 'Pause Game' : 'Play Game'}
-              </TooltipContent>
-            </Tooltip>
-          </div>
+        <div className="flex items-center justify-start">
           <div className="basis-full flex">
-            <TabsList className="ml-auto">
+            <TabsList className="ml-0 rounded-none">
               <TabsTrigger
                 value="3d-viewer"
                 className="text-zinc-600 dark:text-zinc-200"
@@ -66,6 +46,27 @@ export default function MiddleSection() {
               </TabsTrigger>
             </TabsList>
           </div>
+          <div className="basis-full flex justify-evenly">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className="rounded-none"
+                  variant="secondary"
+                  onClick={() => {
+                    if (isPlaying) mvc.pause();
+                    else mvc.play();
+                    setIsPlaying(mvc.isPlaying);
+                  }}
+                >
+                  {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isPlaying ? 'Pause Game' : 'Play Game'}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <div className="mr-auto basis-full"></div>
         </div>
         <Separator />
         {

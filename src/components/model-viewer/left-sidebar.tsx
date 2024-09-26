@@ -37,7 +37,7 @@ export default function LeftSideBar() {
       maxSize={300 * pixelPercent}
       defaultSize={200 * pixelPercent}
     >
-      <h2 className="py-4 px-4 font-bold">{title}</h2>
+      <h2 className="py-2 px-4 font-bold">{title}</h2>
       <Separator />
       <ScrollArea>
         <LeftSideBarElement />
