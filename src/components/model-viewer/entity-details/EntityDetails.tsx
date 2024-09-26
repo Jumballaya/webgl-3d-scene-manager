@@ -1,4 +1,3 @@
-import { ScrollArea } from '@/shadcn/ui/scroll-area';
 import NameDetails from './NameDetails';
 import TransformDetails from './TransformDetails';
 import { EntityActions } from './EntityActions';
@@ -8,15 +7,13 @@ import MeshDetails from './MeshDetails';
 
 export default function EntityDetails() {
   return (
-    <ScrollArea className="h-90 w-full">
-      <div className="w-full h-full">
-        <EntityActions />
-        <NameDetails />
-        <TransformDetails />
-        <LightDetails />
-        <MeshDetails />
-        <ScriptsDetails />
-      </div>
-    </ScrollArea>
+    <div className="w-full">
+      <EntityActions />
+      <NameDetails />
+      <TransformDetails />
+      <LightDetails />
+      <MeshDetails />
+      <ScriptsDetails />
+    </div>
   );
 }

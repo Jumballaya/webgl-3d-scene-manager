@@ -3,10 +3,25 @@ import EntityDetails from './entity-details/EntityDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/ui/tabs';
 import { Separator } from '@/shadcn/ui/separator';
 import { EngineDetails } from './engine-details/EngineDetails';
+import { useEditorStore } from '@/store/editorStore';
+import MaterialDetails from './entity-details/MaterialDetails';
+import { ScrollArea } from '@/shadcn/ui/scroll-area';
 
 export default function RightSidebar() {
+  const { rightSide } = useEditorStore();
+  const tabName =
+    rightSide === 'entity-details' ? 'Entity Details' : 'Material Details';
+
+  const Details =
+    rightSide === 'entity-details' ? EntityDetails : MaterialDetails;
+
   return (
-    <ResizablePanel minSize={12} maxSize={26} defaultSize={18}>
+    <ResizablePanel
+      minSize={12}
+      maxSize={26}
+      defaultSize={18}
+      className="h-full"
+    >
       <Tabs defaultValue="viewer" className="h-full">
         <div className="flex px-4 py-2">
           <TabsList className="ml-auto">
@@ -14,7 +29,7 @@ export default function RightSidebar() {
               value="viewer"
               className="text-zinc-600 dark:text-zinc-200"
             >
-              Entity Details
+              {tabName}
             </TabsTrigger>
             <TabsTrigger
               value="editor"
@@ -25,16 +40,18 @@ export default function RightSidebar() {
           </TabsList>
         </div>
         <Separator />
-        <TabsContent value="viewer" className="m-0 h-full">
-          <div className="w-100 h-100 flex flex-col items-center justify-center">
-            <EntityDetails />
-          </div>
-        </TabsContent>
-        <TabsContent value="editor" className="m-0 h-full">
-          <div className="flex items-center h-100">
-            <EngineDetails />
-          </div>
-        </TabsContent>
+        <ScrollArea className="w-full" style={{ height: '89.5%' }}>
+          <TabsContent value="viewer" className="m-0">
+            <div className="w-100 flex flex-col items-center justify-center">
+              <Details />
+            </div>
+          </TabsContent>
+          <TabsContent value="editor" className="m-0">
+            <div className="flex items-center">
+              <EngineDetails />
+            </div>
+          </TabsContent>
+        </ScrollArea>
       </Tabs>
     </ResizablePanel>
   );

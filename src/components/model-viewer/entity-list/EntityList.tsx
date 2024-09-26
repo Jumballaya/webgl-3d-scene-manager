@@ -4,9 +4,11 @@ import { useEntityStore } from '@/store/entityStore';
 import { EntityListParent } from './EntityListParent';
 import { EntityListCommands } from './EntityListCommands';
 import useModelViewerCore from '@/core/useModelViewerCore';
+import { useEditorStore } from '@/store/editorStore';
 
 export default function EntityList() {
   const { entities, currentlySelected } = useEntityStore((state) => state);
+  const { setRightSide } = useEditorStore();
   const mvc = useModelViewerCore();
   return (
     <div>
@@ -19,6 +21,7 @@ export default function EntityList() {
               entity={e}
               selectEntity={(id: number) => {
                 mvc.setCurrentlySelected(mvc.getEntityById(id));
+                setRightSide('entity-details');
               }}
               currentlySelected={currentlySelected?.id ?? null}
               level={0}

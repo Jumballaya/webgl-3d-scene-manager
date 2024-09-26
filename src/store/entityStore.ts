@@ -1,9 +1,11 @@
 import { SerializedEntity } from '@/engine/ecs/Entity';
+import { Material } from '@/engine/render/material/Material';
 import { create } from 'zustand';
 
 export type EntityStoreState = {
   entities: SerializedEntity[];
   currentlySelected: SerializedEntity | null;
+  currentlySelectedMaterial: Material | null;
   meshList: string[];
   textureList: string[];
   geometryList: string[];
@@ -11,6 +13,7 @@ export type EntityStoreState = {
   scriptList: string[];
   prefabList: string[];
   updateCurrentlySelected: (e: SerializedEntity | null) => void;
+  updateCurrentlySelectedMaterial: (m: Material | null) => void;
   setEntities: (entities: SerializedEntity[]) => void;
   setTextureList: (textures: string[]) => void;
   setMeshList: (textures: string[]) => void;
@@ -23,6 +26,7 @@ export type EntityStoreState = {
 export const useEntityStore = create<EntityStoreState>((set) => ({
   entities: [],
   currentlySelected: null,
+  currentlySelectedMaterial: null,
   meshList: ['none'],
   geometryList: ['none', 'quad'],
   textureList: ['none'],
@@ -33,6 +37,13 @@ export const useEntityStore = create<EntityStoreState>((set) => ({
     set((state) => ({
       ...state,
       currentlySelected: e,
+      currentlySelectedMaterial: null,
+    })),
+  updateCurrentlySelectedMaterial: (m: Material | null) =>
+    set((state) => ({
+      ...state,
+      currentlySelectedMaterial: m,
+      currentlySelected: null,
     })),
   setEntities: (entities: SerializedEntity[]) =>
     set((state) => ({

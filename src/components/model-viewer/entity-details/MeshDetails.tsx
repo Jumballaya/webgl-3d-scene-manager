@@ -7,11 +7,13 @@ import { FilePlus2Icon, Pencil } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shadcn/ui/tooltip';
 import { DropdownSelect } from '@/components/DropdownSelect';
 import { useEffect, useState } from 'react';
+import { useEditorStore } from '@/store/editorStore';
 
 function MeshDetails() {
   const mvc = useModelViewerCore();
   const currentlySelected = mvc.getCurrentlySelected();
   const { geometryList, materialList } = useEntityStore();
+  const { setRightSide } = useEditorStore();
   const meshComp = currentlySelected?.getComponent<Mesh>('Mesh');
   const [matList, setMatList] = useState<{ value: string; display: string }[]>(
     [],
@@ -93,6 +95,11 @@ function MeshDetails() {
               className="p-1 ml-2 h-auto"
               onClick={(e) => {
                 e.preventDefault();
+                const material =
+                  currentlySelected.getComponent<Mesh>('Mesh')?.data.material;
+                setRightSide('material-details');
+                mvc.setCurrentlySelected(null);
+                mvc.setCurrentlySelectedMaterial(material ?? null);
               }}
             >
               <Pencil size={16} />

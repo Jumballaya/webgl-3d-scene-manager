@@ -1,16 +1,17 @@
 import { FormItem } from '@/shadcn/ui/form';
 import { Label } from '@/shadcn/ui/label';
 import type { SelectDetailProps } from './component-details.types';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shadcn/ui/select';
+import { DropdownSelect } from '@/components/DropdownSelect';
+import { useEffect, useState } from 'react';
 
 export function EntityComponentFieldSelect(props: SelectDetailProps) {
+  const { list } = props;
+  const [fullList, setFullList] = useState<
+    { value: string; display: string }[]
+  >([]);
+  useEffect(() => {
+    setFullList((list ?? []).map((v) => ({ value: v, display: v })));
+  }, [list]);
   return (
     <FormItem
       className={`flex flex-row items-baseline mr-2 ${props.className}`}
@@ -18,25 +19,14 @@ export function EntityComponentFieldSelect(props: SelectDetailProps) {
       <Label htmlFor={props.id} className="mr-2">
         {props.label}
       </Label>
-      <Select
-        onValueChange={(albedo) => {
-          props.onChange(albedo);
-        }}
+
+      <DropdownSelect
+        name={'component_field_' + props.id}
         value={props.value}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={props.placeholder ?? 'select a value'} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {props.list.map((t) => (
-              <SelectItem key={t} value={t}>
-                {t}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        onValueChange={props.onChange}
+        options={fullList}
+        placeholder={props.placeholder || ''}
+      />
     </FormItem>
   );
 }

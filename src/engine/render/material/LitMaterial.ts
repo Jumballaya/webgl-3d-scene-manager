@@ -5,6 +5,7 @@ import { PhongMaterialConfig } from './types/phong-material-config.type';
 import { AssetManager } from '@/engine/assets/AssetManager';
 
 type LitMaterialValues = {
+  name?: string;
   albedo?: string;
   normal_map?: string;
   specular_map?: string;
@@ -50,6 +51,7 @@ export class LitMaterial extends Material {
     this.specular = values.specular ?? this.specular;
     this.diffuse = values.diffuse ?? this.diffuse;
     this.opacity = values.opacity ?? this.opacity;
+    this.name = values.name ?? this.name;
   }
 
   public clone() {

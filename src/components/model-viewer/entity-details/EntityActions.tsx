@@ -1,19 +1,12 @@
 import useModelViewerCore from '@/core/useModelViewerCore';
 import { useEntityStore } from '@/store/entityStore';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shadcn/ui/select';
 import { useEffect, useState } from 'react';
 import { Transform } from '@/engine/math/Transform';
 import { Separator } from '@/shadcn/ui/separator';
 import { Prefab } from '@/engine/ecs/Prefab';
 import { BookCopy, Trash2, UserPlus } from 'lucide-react';
 import { ActionBar, ActionBarProps } from '@/components/ActionBar';
+import { DropdownSelect } from '@/components/DropdownSelect';
 
 export function EntityActions() {
   const mvc = useModelViewerCore();
@@ -21,6 +14,12 @@ export function EntityActions() {
   const [componentList, setComponentList] = useState<string[]>(
     mvc.ecs.componentList,
   );
+  const [compList, setCompList] = useState<
+    { value: string; display: string }[]
+  >([]);
+  useEffect(() => {
+    setCompList((componentList ?? []).map((m) => ({ value: m, display: m })));
+  }, [componentList]);
   useEffect(() => {
     if (currentlySelected) {
       const entComponents = currentlySelected.components.map((c) => c[0]);
@@ -93,9 +92,9 @@ export function EntityActions() {
     <>
       <ActionBar name="entity_details" entries={entries} />
       <Separator className="mb-4" />
-      <div className="px-2">
-        <Select
-          disabled={componentList.length === 0}
+      <div className="px-2 mb-4">
+        <DropdownSelect
+          name="entity_details_component_choice"
           onValueChange={(componentName) => {
             switch (componentName) {
               case 'Name': {
@@ -130,20 +129,9 @@ export function EntityActions() {
             }
           }}
           value={''}
-        >
-          <SelectTrigger className="w-full mb-4 h-auto px-2 py-1">
-            <SelectValue placeholder="Add a Component" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {(componentList ?? []).map((m) => (
-                <SelectItem key={m} value={m} className="h-auto px-2 py-1">
-                  {m}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          options={compList}
+          placeholder="Add a Component"
+        />
       </div>
       <Separator />
     </>

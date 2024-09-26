@@ -50,6 +50,7 @@ export class ModelViewerCore {
 
   public ecs: ECS;
   private currentlySelected: Entity | null = null;
+  private currentlySelectedMaterial: Material | null = null;
 
   public entityStore?: EntityStoreState;
 
@@ -500,6 +501,18 @@ export class ModelViewerCore {
     this.assetManager.addMaterial(name, material);
     this.entityStore?.setMaterialList(this.assetManager.materialList);
     return material;
+  }
+
+  public setCurrentlySelectedMaterial(material: Material | null) {
+    this.currentlySelectedMaterial = material;
+    this.entityStore?.updateCurrentlySelectedMaterial(material);
+  }
+
+  public getCurrentlySelectedMaterial(): Material | null {
+    if (this.currentlySelectedMaterial) {
+      return this.currentlySelectedMaterial;
+    }
+    return null;
   }
 
   public addScript(name: string, text: string) {

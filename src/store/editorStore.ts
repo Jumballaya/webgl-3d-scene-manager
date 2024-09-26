@@ -8,8 +8,12 @@ import { create } from 'zustand';
 //
 
 export type EditorTabName = '3d-viewer' | 'text-editor';
+export type RightSideName = 'entity-details' | 'material-details';
 
 export type EditorStoreState = {
+  rightSide: RightSideName;
+  setRightSide: (type: RightSideName) => void;
+
   currentTab: EditorTabName;
   setCurrentTab: (tab: EditorTabName) => void;
 
@@ -22,6 +26,13 @@ export type EditorStoreState = {
 };
 
 export const useEditorStore = create<EditorStoreState>((set) => ({
+  rightSide: 'entity-details',
+  setRightSide: (type: RightSideName) =>
+    set((state) => ({
+      ...state,
+      rightSide: type,
+    })),
+
   currentTab: '3d-viewer',
 
   setCurrentTab: (tab: EditorTabName) =>
